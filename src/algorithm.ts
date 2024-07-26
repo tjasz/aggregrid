@@ -35,11 +35,34 @@ export function shuffleArray<T>(input: T[]) {
 
 export function primeFactors(v: number) {
   let result = [];
-  for (let factor = 2; factor <= v; factor++) {
+  let maxFactor = Math.floor(Math.sqrt(v));
+  let factor = 2;
+  for (; factor <= v && factor <= maxFactor; factor++) {
     while (v % factor === 0) {
       result.push(factor);
       v = v / factor;
     }
   }
+  if (v > 1) {
+    result.push(v);
+  }
   return result;
+}
+
+export function product(a: number[]) {
+  return a.reduce((agg, c) => agg * c, 1);
+}
+
+// find all factorizations with the given number of factors
+export function factorizations(v: number, groupSize: number) {
+  if (groupSize === 1) {
+    return [[v]];
+  }
+  const primes = primeFactors(v);
+  if (groupSize === 2) {
+    const result = [[1, v]];
+
+    return result;
+  }
+  throw new Error(`groupSize ${groupSize} not supported.`)
 }
