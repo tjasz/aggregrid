@@ -32,3 +32,15 @@ export function shuffleArray<T>(input: T[]) {
   }
   return array;
 }
+
+export function primeFactors(v: number) {
+  let result = [1];
+  const maxFactor = Math.floor(Math.sqrt(v));
+  for (let factor = 2; factor < maxFactor; factor++) {
+    while (v % factor === 0) {
+      result.push(factor);
+      v = v / factor;
+    }
+  }
+  return result;
+}
