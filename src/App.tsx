@@ -1,8 +1,10 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Grid from './grid';
 
 function App() {
+  console.log(JSON.stringify(new Grid(9, 4, false)))
   return (
     <div className="App">
       <header className="App-header">
