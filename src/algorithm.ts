@@ -105,10 +105,9 @@ export function factorizations(v: number, numberOfFactors: number) {
     return [[v]];
   }
   const primes = primeFactors(v);
-  if (numberOfFactors === 2) {
-    const result = [[1, v]];
-
-    return result;
-  }
-  throw new Error(`groupSize ${numberOfFactors} not supported.`)
+  const groupings = partitions(primes, numberOfFactors);
+  const factorizations = groupings.map(grouping => {
+    return grouping.map(group => product(group))
+  })
+  return factorizations;
 }

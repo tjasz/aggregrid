@@ -1,4 +1,4 @@
-import { partitions, primeFactors } from "./algorithm";
+import { factorizations, partitions, primeFactors } from "./algorithm";
 
 describe("primeFactors", () => {
   it.each<[number, number[]]>([
@@ -48,6 +48,17 @@ describe("partitions", () => {
     ]],
   ])("partitions(%p) = %p", (args: [number[], number], expected: number[][][]) => {
     const res = partitions(...args);
+    expect(res).toEqual(expected);
+  })
+});
+
+describe("factorizations", () => {
+  it.each<[[number, number], number[][]]>([
+    [[1, 1], [[1]]],
+    [[240, 1], [[240]]],
+    [[4, 2], [[4, 1], [2, 2], [2, 2], [1, 4]]],
+  ])("factorizations(%p) = %p", (args: [number, number], expected: number[][]) => {
+    const res = factorizations(...args);
     expect(res).toEqual(expected);
   })
 });
