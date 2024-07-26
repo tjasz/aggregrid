@@ -126,3 +126,7 @@ export function factorizations(v: number, numberOfFactors: number) {
 export function intersect<T>(a: Set<T>, b: Set<T>) {
   return new Set([...a].filter(v => b.has(v)));
 }
+
+export function triangular(n: number) {
+  return n * (n + 1) / 2;
+}

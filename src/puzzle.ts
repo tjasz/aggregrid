@@ -1,4 +1,4 @@
-import { countingSequence, factorizations, intersect } from "./algorithm";
+import { countingSequence, factorizations, intersect, triangular } from "./algorithm";
 import Grid from "./grid";
 
 export default class Puzzle {
@@ -95,21 +95,44 @@ export default class Puzzle {
             .filter(factorization =>
               factorization.every(n => this.allowedValues.has(n)) &&
               (!this.uniqueValues || factorization.length === new Set(factorization).size) &&
-              factorization.some(n => this.valueOptions[i][j].has(n))
+              // TODO ensure other cells in row have the other factors
+              factorization.some((n, k) => this.valueOptions[i][j].has(n))
             )
             .flat();
           this.valueOptions[i][j] = intersect(this.valueOptions[i][j], new Set(rowFactorOptions));
         }
-        // further limit value options for this cell by its column product
+        // limit value options for this cell by its column product
         if (this.colProducts[j] !== undefined) {
           const colFactorOptions = factorizations(this.colProducts[j]!, this.size)
             .filter(factorization =>
               factorization.every(n => this.allowedValues.has(n)) &&
               (!this.uniqueValues || factorization.length === new Set(factorization).size) &&
+              // TODO ensure the other cells in column have the other factors
               factorization.some(n => this.valueOptions[i][j].has(n))
             )
             .flat();
           this.valueOptions[i][j] = intersect(this.valueOptions[i][j], new Set(colFactorOptions));
+        }
+        // limit value options for this cell by its row sum
+        if (this.rowSums[j] !== undefined) {
+        }
+        // limit value options for this cell by its column sum
+        if (this.colSums[j] !== undefined) {
+        }
+        // the following strategies apply only when the numbers are unique
+        if (this.uniqueValues) {
+          // if a number is the only option for this cell, it can't be in any other cell
+          if (this.valueOptions[i][j].size === 1) {
+            for (let k = 0; k < this.size; k++) {
+              for (let l = 0; l < this.size; l++) {
+                if (k !== i || l !== j) {
+                  this.valueOptions[k][l].delete(Array.from(this.valueOptions[i][j])[0]);
+                }
+              }
+            }
+          }
+          // if a number can only be in this cell, it is the only option for this cell
+          // TODO extend the above to diads, triads, quadruples, etc.
         }
       }
     }
