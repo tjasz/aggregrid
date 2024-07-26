@@ -56,7 +56,13 @@ describe("factorizations", () => {
   it.each<[[number, number], number[][]]>([
     [[1, 1], [[1]]],
     [[240, 1], [[240]]],
-    [[4, 2], [[4, 1], [2, 2], [2, 2], [1, 4]]],
+    [[4, 2], [[1, 4], [2, 2]]],
+    [[16, 3], [
+      [1, 1, 16],
+      [1, 2, 8],
+      [1, 4, 4],
+      [2, 2, 4]
+    ]],
   ])("factorizations(%p) = %p", (args: [number, number], expected: number[][]) => {
     const res = factorizations(...args);
     expect(res).toEqual(expected);

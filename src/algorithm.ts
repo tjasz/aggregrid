@@ -99,6 +99,10 @@ export function partitions<T>(a: T[], numberOfGroups: number) {
   return result;
 }
 
+function arrayEquals<T>(a: T[], b: T[]) {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
 // find all factorizations with the given number of factors
 export function factorizations(v: number, numberOfFactors: number) {
   if (numberOfFactors === 1) {
@@ -107,7 +111,14 @@ export function factorizations(v: number, numberOfFactors: number) {
   const primes = primeFactors(v);
   const groupings = partitions(primes, numberOfFactors);
   const factorizations = groupings.map(grouping => {
-    return grouping.map(group => product(group))
+    return grouping.map(group => product(group)).sort()
+  }).filter((factorization, i, factorizations) => {
+    for (let j = 0; j < i; j++) {
+      if (arrayEquals(factorization, factorizations[j])) {
+        return false;
+      }
+    }
+    return true;
   })
   return factorizations;
 }
