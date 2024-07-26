@@ -8,6 +8,10 @@ export default class Grid {
 
   // values of the grid
   values: number[][];
+  rowSums: number[];
+  colSums: number[];
+  rowProducts: number[];
+  colProducts: number[];
 
   constructor(newSize?: number, newMaxValue?: number, newUniqueValues?: boolean) {
     // set the basic properties
@@ -23,10 +27,19 @@ export default class Grid {
       ? shuffleArray(countingSequence(this.maxValue))
       : randomInts(this.size * this.size, this.maxValue + 1, 1);
     this.values = [];
+    this.rowSums = new Array(this.size).fill(0);
+    this.colSums = new Array(this.size).fill(0);
+    this.rowProducts = new Array(this.size).fill(1);
+    this.colProducts = new Array(this.size).fill(1);
     for (let row = 0; row < this.size; row++) {
       this.values.push([]);
       for (let col = 0; col < this.size; col++) {
-        this.values[row].push(source[row * this.size + col])
+        const value = source[row * this.size + col];
+        this.values[row].push(value);
+        this.rowSums[row] += value;
+        this.colSums[col] += value;
+        this.rowProducts[row] *= value;
+        this.colProducts[col] *= value;
       }
     }
   }

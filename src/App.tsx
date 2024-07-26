@@ -4,7 +4,7 @@ import './App.css';
 import Grid from './grid';
 
 function App() {
-  console.log(JSON.stringify(new Grid(9, 4, false)))
+  console.log(JSON.stringify(new Grid()))
   return (
     <div className="App">
       <header className="App-header">
