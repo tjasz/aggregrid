@@ -122,3 +122,7 @@ export function factorizations(v: number, numberOfFactors: number) {
   })
   return factorizations;
 }
+
+export function intersect<T>(a: Set<T>, b: Set<T>) {
+  return new Set([...a].filter(v => b.has(v)));
+}

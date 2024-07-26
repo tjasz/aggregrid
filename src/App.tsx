@@ -22,7 +22,10 @@ function App() {
             {countingSequence(puzzle.size).map((row, i) => (
               <tr key={i}>
                 <th>{puzzle.rowSums[i]}</th>
-                {countingSequence(puzzle.size).map((n) => (<td key={n}><input type="text"></input></td>))}
+                {countingSequence(puzzle.size).map((n, j) => (<td key={n}>
+                  {JSON.stringify(Array.from(puzzle.valueOptions[i][j]))}
+                  <input type="text"></input>
+                </td>))}
                 <th>{puzzle.rowProducts[i]}</th>
               </tr>
             ))}
