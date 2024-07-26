@@ -4,22 +4,32 @@ import './App.css';
 import Grid from './grid';
 
 function App() {
-  console.log(JSON.stringify(new Grid()))
+  const grid = new Grid();
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <table>
+          <tbody>
+            <tr>
+              <th>&#931;</th>
+              {grid.colSums.map((n, i) => (<th key={i}>{n}</th>))}
+              <th></th>
+            </tr>
+            {grid.values.map((row, i) => (
+              <tr key={i}>
+                <th>{grid.rowSums[i]}</th>
+                {row.map((n, j) => (<td key={j}>{n}</td>))}
+                <th>{grid.rowProducts[i]}</th>
+              </tr>
+            ))}
+            <tr>
+              <th></th>
+              {grid.colProducts.map((n, i) => (<th key={i}>{n}</th>))}
+              <th>&#928;</th>
+            </tr>
+          </tbody>
+        </table>
       </header>
     </div>
   );
