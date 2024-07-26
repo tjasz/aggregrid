@@ -1,4 +1,4 @@
-import { primeFactors } from "./algorithm";
+import { partitions, primeFactors } from "./algorithm";
 
 describe("primeFactors", () => {
   it.each<[number, number[]]>([
@@ -16,6 +16,38 @@ describe("primeFactors", () => {
     [2310, [2, 3, 5, 7, 11]],
   ])("primeFactors(%p) = %p", (args: number, expected: number[]) => {
     const res = primeFactors(args);
+    expect(res).toEqual(expected);
+  })
+});
+
+describe("partitions", () => {
+  it.each<[[number[], number], number[][][]]>([
+    [[[1, 2, 3], 1], [
+      [[1, 2, 3]],
+    ]],
+    [[[1, 2, 3], 2], [
+      [[1, 2, 3], []], // 000
+      [[2, 3], [1]], // 001
+      [[1, 3], [2]], // 010
+      [[3], [1, 2]], // 011
+      [[1, 2], [3]], // 100
+      [[2], [1, 3]], // 101
+      [[1], [2, 3]], // 110
+      [[], [1, 2, 3]], // 111
+    ]],
+    [[[1, 2], 3], [
+      [[1, 2], [], []], // 00
+      [[2], [1], []], // 01
+      [[2], [], [1]], // 02
+      [[1], [2], []], // 10
+      [[], [1, 2], []], // 11
+      [[], [2], [1]], // 12
+      [[1], [], [2]], // 20
+      [[], [1], [2]], // 21
+      [[], [], [1, 2]], // 22
+    ]],
+  ])("partitions(%p) = %p", (args: [number[], number], expected: number[][][]) => {
+    const res = partitions(...args);
     expect(res).toEqual(expected);
   })
 });

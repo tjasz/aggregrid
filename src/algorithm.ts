@@ -53,16 +53,62 @@ export function product(a: number[]) {
   return a.reduce((agg, c) => agg * c, 1);
 }
 
+class Partition {
+  numberOfValues: number;
+  numberOfGroups: number;
+  selections: number[];
+  hasMore: boolean;
+
+  constructor(numberOfValues: number, numberOfGroups: number) {
+    this.numberOfValues = numberOfValues;
+    this.numberOfGroups = numberOfGroups;
+    this.selections = new Array(numberOfValues).fill(0);
+    this.hasMore = true;
+  }
+
+  next() {
+    this.selections[0]++;
+    for (let i = 0; i < this.numberOfValues; i++) {
+      if (this.selections[i] === this.numberOfGroups) {
+        this.selections[i] = 0;
+        if (i === this.numberOfValues - 1) {
+          this.hasMore = false;
+          break;
+        } else {
+          this.selections[i + 1]++;
+        }
+      } else {
+        break;
+      }
+    }
+    return this;
+  }
+}
+export function partitions<T>(a: T[], numberOfGroups: number) {
+  let result: T[][][] = [];
+  for (let partition = new Partition(a.length, numberOfGroups); partition.hasMore; partition = partition.next()) {
+    let thisPart: T[][] = [];
+    for (let group = 0; group < numberOfGroups; group++) {
+      thisPart.push([]);
+    }
+    for (let i = 0; i < a.length; i++) {
+      thisPart[partition.selections[i]].push(a[i]);
+    }
+    result.push(thisPart);
+  }
+  return result;
+}
+
 // find all factorizations with the given number of factors
-export function factorizations(v: number, groupSize: number) {
-  if (groupSize === 1) {
+export function factorizations(v: number, numberOfFactors: number) {
+  if (numberOfFactors === 1) {
     return [[v]];
   }
   const primes = primeFactors(v);
-  if (groupSize === 2) {
+  if (numberOfFactors === 2) {
     const result = [[1, v]];
 
     return result;
   }
-  throw new Error(`groupSize ${groupSize} not supported.`)
+  throw new Error(`groupSize ${numberOfFactors} not supported.`)
 }
