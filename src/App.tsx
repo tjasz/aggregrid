@@ -2,9 +2,12 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Grid from './grid';
+import Puzzle from './puzzle';
+import { countingSequence } from './algorithm';
 
 function App() {
-  const grid = new Grid();
+  const puzzle = new Puzzle(new Grid());
+  puzzle.solve();
 
   return (
     <div className="App">
@@ -13,19 +16,19 @@ function App() {
           <tbody>
             <tr>
               <th>&#931;</th>
-              {grid.colSums.map((n, i) => (<th key={i}>{n}</th>))}
+              {puzzle.colSums.map((n, i) => (<th key={i}>{n}</th>))}
               <th></th>
             </tr>
-            {grid.values.map((row, i) => (
+            {countingSequence(puzzle.size).map((row, i) => (
               <tr key={i}>
-                <th>{grid.rowSums[i]}</th>
-                {row.map((n, j) => (<td key={j}>{n}</td>))}
-                <th>{grid.rowProducts[i]}</th>
+                <th>{puzzle.rowSums[i]}</th>
+                {countingSequence(puzzle.size).map((n) => (<td key={n}><input type="text"></input></td>))}
+                <th>{puzzle.rowProducts[i]}</th>
               </tr>
             ))}
             <tr>
               <th></th>
-              {grid.colProducts.map((n, i) => (<th key={i}>{n}</th>))}
+              {puzzle.colProducts.map((n, i) => (<th key={i}>{n}</th>))}
               <th>&#928;</th>
             </tr>
           </tbody>
