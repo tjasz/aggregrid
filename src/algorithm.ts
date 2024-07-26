@@ -10,7 +10,7 @@ export function randomInts(length: number, exclusiveMax: number, inclusiveMin?: 
   return result;
 }
 
-export function sequence(start: number, length: number, f: (prev: number) => number) {
+export function sequence(length: number, start: number, f: (prev: number) => number) {
   let result: number[] = [];
   let value = start;
   for (let i = 0; i < length; i++) {
@@ -21,7 +21,7 @@ export function sequence(start: number, length: number, f: (prev: number) => num
 }
 
 export function countingSequence(length: number) {
-  return sequence(1, length, p => p + 1)
+  return sequence(length, 1, p => p + 1)
 }
 
 export function shuffleArray<T>(input: T[]) {
@@ -34,9 +34,8 @@ export function shuffleArray<T>(input: T[]) {
 }
 
 export function primeFactors(v: number) {
-  let result = [1];
-  const maxFactor = Math.floor(Math.sqrt(v));
-  for (let factor = 2; factor < maxFactor; factor++) {
+  let result = [];
+  for (let factor = 2; factor <= v; factor++) {
     while (v % factor === 0) {
       result.push(factor);
       v = v / factor;
