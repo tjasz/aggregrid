@@ -119,7 +119,6 @@ export default class Puzzle {
         // limit value options for this cell by its column sum
         if (this.colSums[j] !== undefined) {
         }
-        // the following strategies apply only when the numbers are unique
         if (this.uniqueValues) {
           // if a number is the only option for this cell, it can't be in any other cell
           if (this.valueOptions[i][j].size === 1) {
@@ -131,8 +130,24 @@ export default class Puzzle {
               }
             }
           }
-          // if a number can only be in this cell, it is the only option for this cell
           // TODO extend the above to diads, triads, quadruples, etc.
+        }
+      }
+    }
+    // if a number can only be in this cell, it is the only option for this cell
+    // TODO extend to diads, triads, quadruples, etc.
+    if (this.uniqueValues && this.maxValue === this.size * this.size) {
+      for (let n = 1; n <= this.maxValue; n++) {
+        let cellsForN: [number, number][] = [];
+        for (let i = 0; i < this.size; i++) {
+          for (let j = 0; j < this.size; j++) {
+            if (this.valueOptions[i][j].has(n)) {
+              cellsForN.push([i, j]);
+            }
+          }
+        }
+        if (cellsForN.length === 1) {
+          this.valueOptions[cellsForN[0][0]][cellsForN[0][1]] = new Set([n]);
         }
       }
     }
