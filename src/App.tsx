@@ -2,12 +2,13 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Grid from './grid';
-import Puzzle from './puzzle';
+import Puzzle, { Solver } from './puzzle';
 import { countingSequence } from './algorithm';
 
 function App() {
-  const puzzle = new Puzzle(new Grid(4));
-  puzzle.solve();
+  const puzzle = new Puzzle();
+  const solver = new Solver(puzzle);
+  solver.solve();
 
   return (
     <div className="App">
@@ -23,7 +24,7 @@ function App() {
               <tr key={i}>
                 <th>{puzzle.rowSums[i]}</th>
                 {countingSequence(puzzle.size).map((n, j) => (<td key={n}>
-                  {JSON.stringify(Array.from(puzzle.valueOptions[i][j]))}
+                  {JSON.stringify(Array.from(solver.valueOptions[i][j]))}
                   <input type="text"></input>
                 </td>))}
                 <th>{puzzle.rowProducts[i]}</th>

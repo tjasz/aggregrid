@@ -12,26 +12,74 @@ export default class Puzzle {
   colSums: (number | undefined)[];
   rowProducts: (number | undefined)[];
   colProducts: (number | undefined)[];
-  valueOptions: Set<number>[][];
 
-  constructor(grid: Grid) {
+  constructor(size?: number, maxValue?: number, uniqueValues?: boolean) {
+    const grid = new Grid(size, maxValue, uniqueValues);
+
     this.size = grid.size;
     this.maxValue = grid.maxValue;
     this.uniqueValues = grid.uniqueValues;
 
-    this.rowSums = grid.rowSums;
-    this.rowProducts = grid.rowProducts;
-    this.colSums = grid.colSums;
-    this.colProducts = grid.colProducts;
+    this.rowSums = grid.rowSums.slice();
+    this.rowProducts = grid.rowProducts.slice();
+    this.colSums = grid.colSums.slice();
+    this.colProducts = grid.colProducts.slice();
 
-    // start out by setting the allowed values for each cell to the entire puzzle set
-    this.valueOptions = [];
-    for (let i = 0; i < this.size; i++) {
-      this.valueOptions.push([]);
-      for (let j = 0; j < this.size; j++) {
-        this.valueOptions[i].push(new Set(countingSequence(this.maxValue)));
-      }
+    // remove hints until the puzzle is unsolvable
+    let removedHint = this.harden();
+    while (new Solver(this).solve()) {
+      removedHint = this.harden();
     }
+    // restore the last removed hint, making it barely solvable
+    switch (removedHint) {
+      case 0:
+      case 1:
+      case 2:
+        this.rowSums[removedHint] = grid.rowSums[removedHint];
+        break;
+      case 3:
+      case 4:
+      case 5:
+        this.rowProducts[removedHint - 3] = grid.rowProducts[removedHint - 3];
+        break;
+      case 6:
+      case 7:
+      case 8:
+        this.colSums[removedHint - 6] = grid.colSums[removedHint - 6];
+        break;
+      case 9:
+      case 10:
+      case 11:
+        this.colProducts[removedHint - 9] = grid.colProducts[removedHint - 9];
+        break;
+    }
+  }
+
+  harden() {
+    const choice = Math.floor(Math.random() * 12);
+    switch (choice) {
+      case 0:
+      case 1:
+      case 2:
+        this.rowSums[choice] = undefined;
+        break;
+      case 3:
+      case 4:
+      case 5:
+        this.rowProducts[choice - 3] = undefined;
+        break;
+      case 6:
+      case 7:
+      case 8:
+        this.colSums[choice - 6] = undefined;
+        break;
+      case 9:
+      case 10:
+      case 11:
+        this.colProducts[choice - 9] = undefined;
+        break;
+    }
+    return choice;
   }
 
   validate(solution: number[][]) {
@@ -82,11 +130,46 @@ export default class Puzzle {
 
     return true;
   }
+}
+
+export class Solver {
+  size: number;
+  maxValue: number;
+  uniqueValues: boolean;
+
+  // aggregate hints
+  rowSums: (number | undefined)[];
+  colSums: (number | undefined)[];
+  rowProducts: (number | undefined)[];
+  colProducts: (number | undefined)[];
+
+  valueOptions: Set<number>[][];
+
+  constructor(puzzle: Puzzle) {
+    this.size = puzzle.size;
+    this.maxValue = puzzle.maxValue;
+    this.uniqueValues = puzzle.uniqueValues;
+
+    this.rowSums = puzzle.rowSums;
+    this.rowProducts = puzzle.rowProducts;
+    this.colSums = puzzle.colSums;
+    this.colProducts = puzzle.colProducts;
+
+    // start out by setting the allowed values for each cell to the entire puzzle set
+    this.valueOptions = [];
+    for (let i = 0; i < this.size; i++) {
+      this.valueOptions.push([]);
+      for (let j = 0; j < this.size; j++) {
+        this.valueOptions[i].push(new Set(countingSequence(this.maxValue)));
+      }
+    }
+  }
 
   solve() {
     for (let i = 0; i < 10 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1)); i++) {
       this.solveStep();
     }
+    return !this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
   }
 
   solveStep() {
