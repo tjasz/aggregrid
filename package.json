@@ -1,6 +1,7 @@
 {
   "name": "aggregrid",
   "version": "0.1.0",
+  "homepage": "https://tjasz.github.io/aggregrid",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
@@ -29,6 +30,8 @@
     "workbox-streams": "^6.6.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -51,5 +54,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }

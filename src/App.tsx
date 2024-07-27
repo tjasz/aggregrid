@@ -7,8 +7,9 @@ import { countingSequence } from './algorithm';
 
 function App() {
   const puzzle = new Puzzle();
-  const solver = new Solver(puzzle);
-  solver.solve();
+  // const solver = new Solver(puzzle);
+  // solver.solve();
+  // {JSON.stringify(Array.from(solver.valueOptions[i][j]))}
 
   return (
     <div className="App">
@@ -24,7 +25,6 @@ function App() {
               <tr key={i}>
                 <th>{puzzle.rowSums[i]}</th>
                 {countingSequence(puzzle.size).map((n, j) => (<td key={n}>
-                  {JSON.stringify(Array.from(solver.valueOptions[i][j]))}
                   <input type="text"></input>
                 </td>))}
                 <th>{puzzle.rowProducts[i]}</th>
