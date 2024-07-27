@@ -56,6 +56,7 @@ export default class Puzzle {
   }
 
   harden() {
+    // TODO instead of hardening at random, harden as much as possible
     const choice = Math.floor(Math.random() * 12);
     switch (choice) {
       case 0:

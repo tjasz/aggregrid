@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Grid from './grid';
@@ -6,10 +6,13 @@ import Puzzle, { Solver } from './puzzle';
 import { countingSequence } from './algorithm';
 
 function App() {
-  const puzzle = new Puzzle();
-  // const solver = new Solver(puzzle);
-  // solver.solve();
-  // {JSON.stringify(Array.from(solver.valueOptions[i][j]))}
+  const [size, setSize] = useState(3);
+  const [uniqueValues, setUniqueValues] = useState(true);
+  const [puzzle, setPuzzle] = useState(new Puzzle(size, undefined, uniqueValues));
+
+  const getNewPuzzle = () => {
+    setPuzzle(new Puzzle(size, undefined, uniqueValues))
+  }
 
   return (
     <div className="App">
@@ -37,6 +40,7 @@ function App() {
             </tr>
           </tbody>
         </table>
+        <button onClick={getNewPuzzle}>New Puzzle</button>
       </header>
     </div>
   );
