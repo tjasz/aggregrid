@@ -40,6 +40,10 @@ function App() {
             </tr>
           </tbody>
         </table>
+        <select onChange={e => setSize(parseInt(e.target.value))}>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
         <button onClick={getNewPuzzle}>New Puzzle</button>
       </header>
     </div>
