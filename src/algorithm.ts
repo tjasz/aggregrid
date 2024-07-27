@@ -127,3 +127,27 @@ export function intersect<T>(a: Set<T>, b: Set<T>) {
 export function triangular(n: number) {
   return n * (n + 1) / 2;
 }
+
+export function combinations<T>(options: T[][]) {
+  const lengthMinusOnes = options.map(o => o.length - 1);
+  let result: T[][] = [];
+  let selection = new Array(options.length).fill(0);
+  while (true) {
+    // add selection to result
+    let thisComb: T[] = [];
+    for (let i = 0; i < options.length; i++) {
+      thisComb.push(options[i][selection[i]]);
+    }
+    result.push(thisComb);
+    // increment
+    if (arrayEquals(selection, lengthMinusOnes)) {
+      break;
+    }
+    selection[0]++;
+    for (let i = 0; i < options.length && selection[i] > lengthMinusOnes[i]; i++) {
+      selection[i] = 0;
+      selection[i + 1]++;
+    }
+  }
+  return result;
+}

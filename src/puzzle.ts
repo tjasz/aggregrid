@@ -121,15 +121,15 @@ export default class Puzzle {
         }
         if (this.uniqueValues) {
           // if a number is the only option for this cell, it can't be in any other cell
-          if (this.valueOptions[i][j].size === 1) {
-            for (let k = 0; k < this.size; k++) {
-              for (let l = 0; l < this.size; l++) {
-                if (k !== i || l !== j) {
-                  this.valueOptions[k][l].delete(Array.from(this.valueOptions[i][j])[0]);
-                }
-              }
-            }
-          }
+          // if (this.valueOptions[i][j].size === 1) {
+          //   for (let k = 0; k < this.size; k++) {
+          //     for (let l = 0; l < this.size; l++) {
+          //       if (k !== i || l !== j) {
+          //         this.valueOptions[k][l].delete(Array.from(this.valueOptions[i][j])[0]);
+          //       }
+          //     }
+          //   }
+          // }
           // TODO extend the above to diads, triads, quadruples, etc.
         }
       }

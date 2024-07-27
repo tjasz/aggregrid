@@ -6,8 +6,8 @@ import Puzzle from './puzzle';
 import { countingSequence } from './algorithm';
 
 function App() {
-  const puzzle = new Puzzle(new Grid());
-  puzzle.solve();
+  const puzzle = new Puzzle(new Grid(4));
+  //puzzle.solve();
 
   return (
     <div className="App">
