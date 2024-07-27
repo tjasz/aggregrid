@@ -57,13 +57,11 @@ class Partition {
   numberOfValues: number;
   numberOfGroups: number;
   selections: number[];
-  hasMore: boolean;
 
   constructor(numberOfValues: number, numberOfGroups: number) {
     this.numberOfValues = numberOfValues;
     this.numberOfGroups = numberOfGroups;
     this.selections = new Array(numberOfValues).fill(0);
-    this.hasMore = true;
   }
 
   next() {
@@ -71,22 +69,21 @@ class Partition {
     for (let i = 0; i < this.numberOfValues; i++) {
       if (this.selections[i] === this.numberOfGroups) {
         this.selections[i] = 0;
-        if (i === this.numberOfValues - 1) {
-          this.hasMore = false;
-          break;
-        } else {
-          this.selections[i + 1]++;
-        }
+        this.selections[i + 1]++;
       } else {
         break;
       }
     }
     return this;
   }
+
+  hasMore() {
+    return this.selections[this.selections.length - 1] === 0;
+  }
 }
 export function partitions<T>(a: T[], numberOfGroups: number) {
   let result: T[][][] = [];
-  for (let partition = new Partition(a.length, numberOfGroups); partition.hasMore; partition = partition.next()) {
+  for (let partition = new Partition(a.length, numberOfGroups); partition.hasMore(); partition = partition.next()) {
     let thisPart: T[][] = [];
     for (let group = 0; group < numberOfGroups; group++) {
       thisPart.push([]);
