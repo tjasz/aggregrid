@@ -7,7 +7,7 @@ import { countingSequence } from './algorithm';
 
 function App() {
   const puzzle = new Puzzle(new Grid(4));
-  //puzzle.solve();
+  puzzle.solve();
 
   return (
     <div className="App">

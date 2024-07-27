@@ -86,6 +86,12 @@ export default class Puzzle {
   }
 
   solve() {
+    for (let i = 0; i < 10 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1)); i++) {
+      this.solveStep();
+    }
+  }
+
+  solveStep() {
     // use the row products to eliminate options
     for (let row = 0; row < this.size; row++) {
       if (this.rowProducts[row] !== undefined) {
@@ -136,73 +142,39 @@ export default class Puzzle {
         }
       }
     }
-
-
-
-    // // use the product and sum clues to eliminate options
-    // for (let i = 0; i < this.size; i++) {
-    //   for (let j = 0; j < this.size; j++) {
-    //     // limit value options for this cell by its row product
-    //     if (this.rowProducts[i] !== undefined) {
-    //       const rowFactorOptions = factorizations(this.rowProducts[i]!, this.size)
-    //         .filter(factorization =>
-    //           factorization.every(n => this.allowedValues.has(n)) &&
-    //           (!this.uniqueValues || factorization.length === new Set(factorization).size) &&
-    //           // TODO ensure other cells in row have the other factors
-    //           factorization.some((n, k) => this.valueOptions[i][j].has(n))
-    //         )
-    //         .flat();
-    //       this.valueOptions[i][j] = intersect(this.valueOptions[i][j], new Set(rowFactorOptions));
-    //     }
-    //     // limit value options for this cell by its column product
-    //     if (this.colProducts[j] !== undefined) {
-    //       const colFactorOptions = factorizations(this.colProducts[j]!, this.size)
-    //         .filter(factorization =>
-    //           factorization.every(n => this.allowedValues.has(n)) &&
-    //           (!this.uniqueValues || factorization.length === new Set(factorization).size) &&
-    //           // TODO ensure the other cells in column have the other factors
-    //           factorization.some(n => this.valueOptions[i][j].has(n))
-    //         )
-    //         .flat();
-    //       this.valueOptions[i][j] = intersect(this.valueOptions[i][j], new Set(colFactorOptions));
-    //     }
-    //     // limit value options for this cell by its row sum
-    //     if (this.rowSums[j] !== undefined) {
-    //     }
-    //     // limit value options for this cell by its column sum
-    //     if (this.colSums[j] !== undefined) {
-    //     }
-    //     if (this.uniqueValues) {
-    //       // if a number is the only option for this cell, it can't be in any other cell
-    //       // if (this.valueOptions[i][j].size === 1) {
-    //       //   for (let k = 0; k < this.size; k++) {
-    //       //     for (let l = 0; l < this.size; l++) {
-    //       //       if (k !== i || l !== j) {
-    //       //         this.valueOptions[k][l].delete(Array.from(this.valueOptions[i][j])[0]);
-    //       //       }
-    //       //     }
-    //       //   }
-    //       // }
-    //       // TODO extend the above to diads, triads, quadruples, etc.
-    //     }
-    //   }
-    // }
-    // // if a number can only be in this cell, it is the only option for this cell
-    // // TODO extend to diads, triads, quadruples, etc.
-    // if (this.uniqueValues && this.maxValue === this.size * this.size) {
-    //   for (let n = 1; n <= this.maxValue; n++) {
-    //     let cellsForN: [number, number][] = [];
-    //     for (let i = 0; i < this.size; i++) {
-    //       for (let j = 0; j < this.size; j++) {
-    //         if (this.valueOptions[i][j].has(n)) {
-    //           cellsForN.push([i, j]);
-    //         }
-    //       }
-    //     }
-    //     if (cellsForN.length === 1) {
-    //       this.valueOptions[cellsForN[0][0]][cellsForN[0][1]] = new Set([n]);
-    //     }
-    //   }
-    // }
+    // if a number is the only option for this cell, it can't be in any other cell
+    // TODO extend to diads, triads, quadruples, etc.
+    if (this.uniqueValues) {
+      for (let row = 0; row < this.size; row++) {
+        for (let col = 0; col < this.size; col++) {
+          if (this.valueOptions[row][col].size === 1) {
+            for (let i = 0; i < this.size; i++) {
+              for (let j = 0; j < this.size; j++) {
+                if (i !== row || j !== col) {
+                  this.valueOptions[i][j].delete(Array.from(this.valueOptions[row][col])[0]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    // if a number can only be in this cell, it is the only option for this cell
+    // TODO extend to diads, triads, quadruples, etc.
+    if (this.uniqueValues && this.maxValue === this.size * this.size) {
+      for (let n = 1; n <= this.maxValue; n++) {
+        let cellsForN: [number, number][] = [];
+        for (let row = 0; row < this.size; row++) {
+          for (let col = 0; col < this.size; col++) {
+            if (this.valueOptions[row][col].has(n)) {
+              cellsForN.push([row, col]);
+            }
+          }
+        }
+        if (cellsForN.length === 1) {
+          this.valueOptions[cellsForN[0][0]][cellsForN[0][1]] = new Set([n]);
+        }
+      }
+    }
   }
 }
