@@ -6,7 +6,6 @@ export default class Puzzle {
   size: number;
   maxValue: number;
   uniqueValues: boolean;
-  allowedValues: Set<number>;
 
   // aggregate hints
   rowSums: (number | undefined)[];
@@ -19,7 +18,6 @@ export default class Puzzle {
     this.size = grid.size;
     this.maxValue = grid.maxValue;
     this.uniqueValues = grid.uniqueValues;
-    this.allowedValues = new Set(countingSequence(this.maxValue));
 
     this.rowSums = grid.rowSums;
     this.rowProducts = grid.rowProducts;
@@ -31,7 +29,7 @@ export default class Puzzle {
     for (let i = 0; i < this.size; i++) {
       this.valueOptions.push([]);
       for (let j = 0; j < this.size; j++) {
-        this.valueOptions[i].push(new Set(this.allowedValues));
+        this.valueOptions[i].push(new Set(countingSequence(this.maxValue)));
       }
     }
   }
