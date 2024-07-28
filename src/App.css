@@ -25,3 +25,11 @@ td.selected {
 #numberButtons button {
   font-size: 16pt;
 }
+
+.value {
+  font-size: 16pt;
+}
+
+.option {
+  font-size: 8pt;
+}
