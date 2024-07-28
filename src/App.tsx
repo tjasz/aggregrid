@@ -17,6 +17,10 @@ function App() {
     setPuzzle(new Puzzle(size, undefined, uniqueValues))
   }
 
+  const setCellValue = (i: number, j: number, v: number | undefined) => {
+    setCellValues(cellValues.map((oldValue, idx) => idx === i * size + j ? v : oldValue))
+  }
+
   return (
     <div id="game">
       <table>
@@ -34,7 +38,8 @@ function App() {
                   key={n}
                   value={cellValues[i * size + j]}
                   options={[]}
-                  onSetValue={newValue => setCellValues(cellValues.map((v, idx) => idx === i * size + j ? newValue : v))}
+                  onSetValue={v => setCellValue(i, j, v)}
+                  onClick={() => setSelectedCell([i, j])}
                   tabIndex={i * size + j}
                 />
               ))}
@@ -48,6 +53,13 @@ function App() {
           </tr>
         </tbody>
       </table>
+      {countingSequence(puzzle.maxValue).map(n => (
+        <button onClick={() => {
+          if (selectedCell) {
+            setCellValue(selectedCell[0], selectedCell[1], n);
+          }
+        }}>{n}</button>
+      ))}
       <label htmlFor="uniqueValues">Unique Values</label>
       <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
       <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
