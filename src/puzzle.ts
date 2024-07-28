@@ -27,33 +27,7 @@ export default class Puzzle {
     this.colProducts = this.grid.colProducts.slice();
 
     // remove hints until the puzzle is unsolvable
-    let removedHint = this.harden();
-    while (new Solver(this).solve()) {
-      removedHint = this.harden();
-    }
-    // restore the last removed hint, making it barely solvable
-    switch (removedHint) {
-      case 0:
-      case 1:
-      case 2:
-        this.rowSums[removedHint] = this.grid.rowSums[removedHint];
-        break;
-      case 3:
-      case 4:
-      case 5:
-        this.rowProducts[removedHint - 3] = this.grid.rowProducts[removedHint - 3];
-        break;
-      case 6:
-      case 7:
-      case 8:
-        this.colSums[removedHint - 6] = this.grid.colSums[removedHint - 6];
-        break;
-      case 9:
-      case 10:
-      case 11:
-        this.colProducts[removedHint - 9] = this.grid.colProducts[removedHint - 9];
-        break;
-    }
+    this.harden();
   }
 
   removeHint(choice: number) {
@@ -93,10 +67,21 @@ export default class Puzzle {
   }
 
   harden() {
-    // TODO instead of hardening at random, harden as much as possible
-    const choice = Math.floor(Math.random() * 4 * this.size);
-    this.removeHint(choice);
-    return choice;
+    // remove all hints that are not essential to solving the puzzle
+    let anyRemoved = true;
+    for (let round = 0; anyRemoved && round < 10; round++) {
+      anyRemoved = false;
+      for (let hint = round === 0 ? Math.floor(Math.random() * 4 * this.size) : 0; hint < 4 * this.size; hint++) {
+        // remove hint if it is not essential to solving this puzzle
+        this.removeHint(hint);
+        if (!new Solver(this).solve()) {
+          this.restoreHint(hint);
+        }
+        else {
+          anyRemoved = true;
+        }
+      }
+    }
   }
 
   validate(solution: number[][]) {
