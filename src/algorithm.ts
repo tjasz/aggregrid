@@ -96,7 +96,7 @@ export function partitions<T>(a: T[], numberOfGroups: number) {
   return result;
 }
 
-function arrayEquals<T>(a: T[], b: T[]) {
+export function arrayEquals<T>(a: T[], b: T[]) {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 }
 

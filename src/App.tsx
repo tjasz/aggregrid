@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Grid from './grid';
 import Puzzle, { Solver } from './puzzle';
-import { countingSequence } from './algorithm';
+import { arrayEquals, countingSequence } from './algorithm';
 import { Cell } from './Cell';
 
 function App() {
@@ -86,6 +86,13 @@ function App() {
             {n % puzzle.size === 0 ? <br /> : undefined}
           </>
         ))}
+        <button onClick={() => {
+          if (arrayEquals(cellValues, puzzle.grid.values.flat())) {
+            alert("Correct!")
+          } else {
+            alert("Incorrect or Incomplete.")
+          }
+        }}>Validate</button>
       </div>
       <div id="newGameForm">
         <label htmlFor="uniqueValues">Unique Values</label>

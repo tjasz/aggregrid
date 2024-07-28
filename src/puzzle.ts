@@ -3,6 +3,7 @@ import Grid from "./grid";
 
 export default class Puzzle {
   // basic properties of the grid
+  grid: Grid;
   size: number;
   maxValue: number;
   uniqueValues: boolean;
@@ -14,16 +15,16 @@ export default class Puzzle {
   colProducts: (number | undefined)[];
 
   constructor(size?: number, maxValue?: number, uniqueValues?: boolean) {
-    const grid = new Grid(size, maxValue, uniqueValues);
+    this.grid = new Grid(size, maxValue, uniqueValues);
 
-    this.size = grid.size;
-    this.maxValue = grid.maxValue;
-    this.uniqueValues = grid.uniqueValues;
+    this.size = this.grid.size;
+    this.maxValue = this.grid.maxValue;
+    this.uniqueValues = this.grid.uniqueValues;
 
-    this.rowSums = grid.rowSums.slice();
-    this.rowProducts = grid.rowProducts.slice();
-    this.colSums = grid.colSums.slice();
-    this.colProducts = grid.colProducts.slice();
+    this.rowSums = this.grid.rowSums.slice();
+    this.rowProducts = this.grid.rowProducts.slice();
+    this.colSums = this.grid.colSums.slice();
+    this.colProducts = this.grid.colProducts.slice();
 
     // remove hints until the puzzle is unsolvable
     let removedHint = this.harden();
@@ -35,22 +36,22 @@ export default class Puzzle {
       case 0:
       case 1:
       case 2:
-        this.rowSums[removedHint] = grid.rowSums[removedHint];
+        this.rowSums[removedHint] = this.grid.rowSums[removedHint];
         break;
       case 3:
       case 4:
       case 5:
-        this.rowProducts[removedHint - 3] = grid.rowProducts[removedHint - 3];
+        this.rowProducts[removedHint - 3] = this.grid.rowProducts[removedHint - 3];
         break;
       case 6:
       case 7:
       case 8:
-        this.colSums[removedHint - 6] = grid.colSums[removedHint - 6];
+        this.colSums[removedHint - 6] = this.grid.colSums[removedHint - 6];
         break;
       case 9:
       case 10:
       case 11:
-        this.colProducts[removedHint - 9] = grid.colProducts[removedHint - 9];
+        this.colProducts[removedHint - 9] = this.grid.colProducts[removedHint - 9];
         break;
     }
   }
