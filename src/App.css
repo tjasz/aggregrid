@@ -12,3 +12,16 @@ td {
   min-width: 2em;
   height: 2em;
 }
+
+td.selected {
+  border: 1px solid red;
+}
+
+#numberButtons {
+  margin: 0 auto;
+  width: fit-content;
+}
+
+#numberButtons button {
+  font-size: 16pt;
+}

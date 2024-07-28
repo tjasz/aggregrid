@@ -43,6 +43,7 @@ function App() {
                   onSetValue={v => setCellValue(i, j, v)}
                   onClick={() => setSelectedCell([i, j])}
                   tabIndex={i * size + j}
+                  selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
                 />
               ))}
               <th>{puzzle.rowProducts[i]}</th>
