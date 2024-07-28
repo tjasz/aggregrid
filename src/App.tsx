@@ -11,6 +11,7 @@ function App() {
   const [uniqueValues, setUniqueValues] = useState(true);
   const [puzzle, setPuzzle] = useState(new Puzzle(size, undefined, uniqueValues));
   const [cellValues, setCellValues] = useState<(number | undefined)[]>(new Array(size * size).fill(undefined));
+  const [cellOptions, setCellOptions] = useState<number[][]>(new Array(size * size).fill([]));
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
 
   const getNewPuzzle = () => {
@@ -21,6 +22,10 @@ function App() {
 
   const setCellValue = (i: number, j: number, v: number | undefined) => {
     setCellValues(cellValues.map((oldValue, idx) => idx === i * size + j ? v : oldValue))
+  }
+
+  const setOptionsForCell = (i: number, j: number, o: number[]) => {
+    setCellOptions(cellOptions.map((oldValue, idx) => idx === i * size + j ? o : oldValue))
   }
 
   return (
@@ -39,8 +44,9 @@ function App() {
                 <Cell
                   key={n}
                   value={cellValues[i * size + j]}
-                  options={[]}
+                  options={cellOptions[i * size + j]}
                   onSetValue={v => setCellValue(i, j, v)}
+                  onSetOptions={o => setOptionsForCell(i, j, o)}
                   onClick={() => setSelectedCell([i, j])}
                   tabIndex={i * size + j}
                   selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
@@ -59,7 +65,7 @@ function App() {
       <div id="numberButtons">
         {countingSequence(puzzle.maxValue).map(n => (
           <>
-            <button onClick={() => {
+            <button key={n} onClick={() => {
               if (selectedCell) {
                 setCellValue(selectedCell[0], selectedCell[1], n);
               }
