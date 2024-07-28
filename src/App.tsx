@@ -55,20 +55,24 @@ function App() {
           </tr>
         </tbody>
       </table>
-      {countingSequence(puzzle.maxValue).map(n => (
-        <button onClick={() => {
-          if (selectedCell) {
-            setCellValue(selectedCell[0], selectedCell[1], n);
-          }
-        }}>{n}</button>
-      ))}
-      <label htmlFor="uniqueValues">Unique Values</label>
-      <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
-      <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-      <button onClick={getNewPuzzle}>New Puzzle</button>
+      <div id="numberButtons">
+        {countingSequence(puzzle.maxValue).map(n => (
+          <button onClick={() => {
+            if (selectedCell) {
+              setCellValue(selectedCell[0], selectedCell[1], n);
+            }
+          }}>{n}</button>
+        ))}
+      </div>
+      <div id="newGameForm">
+        <label htmlFor="uniqueValues">Unique Values</label>
+        <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
+        <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <button onClick={getNewPuzzle}>New Puzzle</button>
+      </div>
     </div>
   );
 }
