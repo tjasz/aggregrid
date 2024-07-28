@@ -13,6 +13,7 @@ function App() {
   const [cellValues, setCellValues] = useState<(number | undefined)[]>(new Array(size * size).fill(undefined));
   const [cellOptions, setCellOptions] = useState<number[][]>(new Array(size * size).fill([]));
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
+  const [inputMode, setInputMode] = useState(true);
 
   const getNewPuzzle = () => {
     setPuzzle(new Puzzle(size, undefined, uniqueValues));
@@ -63,11 +64,17 @@ function App() {
         </tbody>
       </table>
       <div id="numberButtons">
+        <label htmlFor="inputMode">Value</label>
+        <input type="checkbox" name="inputMode" checked={inputMode} onChange={() => setInputMode(!inputMode)} />
+        <br />
         {countingSequence(puzzle.maxValue).map(n => (
           <>
             <button key={n} onClick={() => {
               if (selectedCell) {
-                setCellValue(selectedCell[0], selectedCell[1], n);
+                const options = cellOptions[selectedCell[0] * size + selectedCell[1]];
+                inputMode
+                  ? setCellValue(selectedCell[0], selectedCell[1], n)
+                  : setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n]);
               }
             }}>{n}</button>
             {n % size === 0 ? <br /> : undefined}
