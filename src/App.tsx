@@ -15,39 +15,37 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <table>
-          <tbody>
-            <tr>
-              <th>&#931;</th>
-              {puzzle.colSums.map((n, i) => (<th key={i}>{n}</th>))}
-              <th></th>
+    <div id="game">
+      <table>
+        <tbody>
+          <tr>
+            <th>&#931;</th>
+            {puzzle.colSums.map((n, i) => (<th key={i}>{n}</th>))}
+            <th></th>
+          </tr>
+          {countingSequence(puzzle.size).map((row, i) => (
+            <tr key={i}>
+              <th>{puzzle.rowSums[i]}</th>
+              {countingSequence(puzzle.size).map((n, j) => (<td key={n}>
+                <input type="text"></input>
+              </td>))}
+              <th>{puzzle.rowProducts[i]}</th>
             </tr>
-            {countingSequence(puzzle.size).map((row, i) => (
-              <tr key={i}>
-                <th>{puzzle.rowSums[i]}</th>
-                {countingSequence(puzzle.size).map((n, j) => (<td key={n}>
-                  <input type="text"></input>
-                </td>))}
-                <th>{puzzle.rowProducts[i]}</th>
-              </tr>
-            ))}
-            <tr>
-              <th></th>
-              {puzzle.colProducts.map((n, i) => (<th key={i}>{n}</th>))}
-              <th>&#928;</th>
-            </tr>
-          </tbody>
-        </table>
-        <label htmlFor="uniqueValues">Unique Values</label>
-        <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
-        <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-        <button onClick={getNewPuzzle}>New Puzzle</button>
-      </header>
+          ))}
+          <tr>
+            <th></th>
+            {puzzle.colProducts.map((n, i) => (<th key={i}>{n}</th>))}
+            <th>&#928;</th>
+          </tr>
+        </tbody>
+      </table>
+      <label htmlFor="uniqueValues">Unique Values</label>
+      <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
+      <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <button onClick={getNewPuzzle}>New Puzzle</button>
     </div>
   );
 }
