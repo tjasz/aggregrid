@@ -57,11 +57,14 @@ function App() {
       </table>
       <div id="numberButtons">
         {countingSequence(puzzle.maxValue).map(n => (
-          <button onClick={() => {
-            if (selectedCell) {
-              setCellValue(selectedCell[0], selectedCell[1], n);
-            }
-          }}>{n}</button>
+          <>
+            <button onClick={() => {
+              if (selectedCell) {
+                setCellValue(selectedCell[0], selectedCell[1], n);
+              }
+            }}>{n}</button>
+            {n % size === 0 ? <br /> : undefined}
+          </>
         ))}
       </div>
       <div id="newGameForm">
@@ -71,6 +74,7 @@ function App() {
           <option value="3">3</option>
           <option value="4">4</option>
         </select>
+        <br />
         <button onClick={getNewPuzzle}>New Puzzle</button>
       </div>
     </div>
