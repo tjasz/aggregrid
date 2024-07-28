@@ -56,31 +56,46 @@ export default class Puzzle {
     }
   }
 
+  removeHint(choice: number) {
+    if (choice < this.size) {
+      this.rowSums[choice] = undefined;
+    }
+    else if (choice < 2 * this.size) {
+      this.rowProducts[choice - this.size] = undefined;
+    }
+    else if (choice < 3 * this.size) {
+      this.colSums[choice - 2 * this.size] = undefined
+    }
+    else if (choice < 4 * this.size) {
+      this.colProducts[choice - 3 * this.size] = undefined;
+    }
+    else {
+      throw (`Cannot remove hint #${choice} in a ${this.size} x ${this.size} grid.`)
+    }
+  }
+
+  restoreHint(choice: number) {
+    if (choice < this.size) {
+      this.rowSums[choice] = this.grid.rowSums[choice];
+    }
+    else if (choice < 2 * this.size) {
+      this.rowProducts[choice - this.size] = this.grid.rowProducts[choice - this.size];
+    }
+    else if (choice < 3 * this.size) {
+      this.colSums[choice - 2 * this.size] = this.grid.colSums[choice - 2 * this.size]
+    }
+    else if (choice < 4 * this.size) {
+      this.colProducts[choice - 3 * this.size] = this.grid.colProducts[choice - 3 * this.size];
+    }
+    else {
+      throw (`Cannot restore hint #${choice} in a ${this.size} x ${this.size} grid.`)
+    }
+  }
+
   harden() {
     // TODO instead of hardening at random, harden as much as possible
-    const choice = Math.floor(Math.random() * 12);
-    switch (choice) {
-      case 0:
-      case 1:
-      case 2:
-        this.rowSums[choice] = undefined;
-        break;
-      case 3:
-      case 4:
-      case 5:
-        this.rowProducts[choice - 3] = undefined;
-        break;
-      case 6:
-      case 7:
-      case 8:
-        this.colSums[choice - 6] = undefined;
-        break;
-      case 9:
-      case 10:
-      case 11:
-        this.colProducts[choice - 9] = undefined;
-        break;
-    }
+    const choice = Math.floor(Math.random() * 4 * this.size);
+    this.removeHint(choice);
     return choice;
   }
 
