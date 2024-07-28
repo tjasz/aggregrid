@@ -40,7 +40,9 @@ function App() {
             </tr>
           </tbody>
         </table>
-        <select onChange={e => setSize(parseInt(e.target.value))}>
+        <label htmlFor="uniqueValues">Unique Values</label>
+        <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
+        <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
           <option value="3">3</option>
           <option value="4">4</option>
         </select>
