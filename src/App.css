@@ -6,3 +6,9 @@
   margin: 0 auto;
   width: fit-content;
 }
+
+td {
+  border: 1px solid black;
+  min-width: 2em;
+  height: 2em;
+}

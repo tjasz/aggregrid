@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { KeyboardEventHandler, useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Grid from './grid';
 import Puzzle, { Solver } from './puzzle';
 import { countingSequence } from './algorithm';
+import { Cell } from './Cell';
 
 function App() {
   const [size, setSize] = useState(3);
   const [uniqueValues, setUniqueValues] = useState(true);
   const [puzzle, setPuzzle] = useState(new Puzzle(size, undefined, uniqueValues));
+  const [cellValues, setCellValues] = useState<(number | undefined)[]>(new Array(size * size).fill(undefined));
+  const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
 
   const getNewPuzzle = () => {
     setPuzzle(new Puzzle(size, undefined, uniqueValues))
@@ -26,9 +29,15 @@ function App() {
           {countingSequence(puzzle.size).map((row, i) => (
             <tr key={i}>
               <th>{puzzle.rowSums[i]}</th>
-              {countingSequence(puzzle.size).map((n, j) => (<td key={n}>
-                <input type="text"></input>
-              </td>))}
+              {countingSequence(puzzle.size).map((n, j) => (
+                <Cell
+                  key={n}
+                  value={cellValues[i * size + j]}
+                  options={[]}
+                  onSetValue={newValue => setCellValues(cellValues.map((v, idx) => idx === i * size + j ? newValue : v))}
+                  tabIndex={i * size + j}
+                />
+              ))}
               <th>{puzzle.rowProducts[i]}</th>
             </tr>
           ))}
