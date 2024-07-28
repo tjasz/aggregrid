@@ -14,7 +14,9 @@ function App() {
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
 
   const getNewPuzzle = () => {
-    setPuzzle(new Puzzle(size, undefined, uniqueValues))
+    setPuzzle(new Puzzle(size, undefined, uniqueValues));
+    setCellValues(new Array(size * size).fill(undefined));
+    setSelectedCell(undefined);
   }
 
   const setCellValue = (i: number, j: number, v: number | undefined) => {
