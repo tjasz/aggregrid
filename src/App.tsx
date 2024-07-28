@@ -18,15 +18,16 @@ function App() {
   const getNewPuzzle = () => {
     setPuzzle(new Puzzle(size, undefined, uniqueValues));
     setCellValues(new Array(size * size).fill(undefined));
+    setCellOptions(new Array(size * size).fill([]));
     setSelectedCell(undefined);
   }
 
   const setCellValue = (i: number, j: number, v: number | undefined) => {
-    setCellValues(cellValues.map((oldValue, idx) => idx === i * size + j ? v : oldValue))
+    setCellValues(cellValues.map((oldValue, idx) => idx === i * puzzle.size + j ? v : oldValue))
   }
 
   const setOptionsForCell = (i: number, j: number, o: number[]) => {
-    setCellOptions(cellOptions.map((oldValue, idx) => idx === i * size + j ? o : oldValue))
+    setCellOptions(cellOptions.map((oldValue, idx) => idx === i * puzzle.size + j ? o : oldValue))
   }
 
   return (
@@ -44,12 +45,12 @@ function App() {
               {countingSequence(puzzle.size).map((n, j) => (
                 <Cell
                   key={n}
-                  value={cellValues[i * size + j]}
-                  options={cellOptions[i * size + j]}
+                  value={cellValues[i * puzzle.size + j]}
+                  options={cellOptions[i * puzzle.size + j]}
                   onSetValue={v => setCellValue(i, j, v)}
                   onSetOptions={o => setOptionsForCell(i, j, o)}
                   onClick={() => setSelectedCell([i, j])}
-                  tabIndex={i * size + j}
+                  tabIndex={i * puzzle.size + j}
                   selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
                 />
               ))}
@@ -71,13 +72,13 @@ function App() {
           <>
             <button key={n} onClick={() => {
               if (selectedCell) {
-                const options = cellOptions[selectedCell[0] * size + selectedCell[1]];
+                const options = cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]];
                 inputMode
                   ? setCellValue(selectedCell[0], selectedCell[1], n)
                   : setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n]);
               }
             }}>{n}</button>
-            {n % size === 0 ? <br /> : undefined}
+            {n % puzzle.size === 0 ? <br /> : undefined}
           </>
         ))}
       </div>
