@@ -81,7 +81,7 @@ function App() {
                 const options = cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]];
                 inputMode
                   ? setCellValue(selectedCell[0], selectedCell[1], n)
-                  : setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n].sort());
+                  : setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n]);
               }
             }}>{n}</button>
             {n % puzzle.size === 0 ? <br /> : undefined}
