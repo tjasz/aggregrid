@@ -102,7 +102,7 @@ function App() {
         <br />
         {countingSequence(puzzle.maxValue).map(n => (
           <span key={n}>
-            <button key={n} disabled={puzzle.uniqueValues && cellValues.includes(n)} onClick={() => {
+            <button key={n} disabled={selectedCell === undefined || (inputMode || !cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]].includes(n)) && puzzle.uniqueValues && cellValues.includes(n)} onClick={() => {
               if (selectedCell) {
                 const options = cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]];
                 inputMode
