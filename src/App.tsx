@@ -1,8 +1,6 @@
-import React, { KeyboardEventHandler, useEffect, useState } from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
-import Grid from './grid';
-import Puzzle, { Solver } from './puzzle';
+import Puzzle from './puzzle';
 import { arrayEquals, countingSequence } from './algorithm';
 import { Cell } from './Cell';
 
