@@ -13,8 +13,9 @@ th {
 
 td {
   border: 1px solid black;
-  min-width: min(14vw, 7vh);
+  width: min(14vw, 7vh);
   height: min(14vw, 7vh);
+  overflow: hidden;
 }
 
 td.selected {
@@ -27,7 +28,7 @@ td.selected {
 }
 
 #numberButtons button {
-  font-size: min(10vw, 5vh);
+  font-size: min(9vw, 4.5vh);
   min-width: min(14vw, 7vh);
   height: min(14vw, 7vh);
 }
@@ -35,9 +36,21 @@ td.selected {
 .value {
   margin: 0 auto;
   width: fit-content;
-  font-size: min(10vw, 5vh);
+  font-size: min(9vw, 4.5vh);
 }
 
-.option {
-  font-size: min(4.5vw, 2.25vh);
+.option3 {
+  display: block;
+  float: left;
+  width: 33%;
+  font-size: min(3vw, 1.5vh);
+  text-align: center;
+}
+
+.option4 {
+  display: block;
+  float: left;
+  width: 24%;
+  font-size: min(2vw, 1vh);
+  text-align: center;
 }
