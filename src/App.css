@@ -7,10 +7,14 @@
   width: fit-content;
 }
 
+th {
+  font-size: 7.5vw;
+}
+
 td {
   border: 1px solid black;
-  min-width: 2em;
-  height: 2em;
+  min-width: 10vw;
+  height: 10vw;
 }
 
 td.selected {
@@ -23,13 +27,17 @@ td.selected {
 }
 
 #numberButtons button {
-  font-size: 16pt;
+  font-size: 7.5vw;
+  min-width: 10vw;
+  height: 10vw;
 }
 
 .value {
-  font-size: 16pt;
+  margin: 0 auto;
+  width: fit-content;
+  font-size: 7.5vw;
 }
 
 .option {
-  font-size: 8pt;
+  font-size: 2vw;
 }
