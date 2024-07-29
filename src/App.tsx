@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import Puzzle from './puzzle';
-import { countingSequence } from './algorithm';
+import { countingSequence, primeFactors } from './algorithm';
 import { Cell } from './Cell';
 import { NewGameForm } from './NewGameForm';
 import { ValidationState } from './ValidationState';
@@ -71,9 +71,9 @@ function App() {
                   selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
                 />
               ))}
-              <th>
+              <th onClick={() => alert(primeFactors(puzzle.rowProducts[i] ?? 1))}>
                 {puzzle.rowProducts[i]}
-                <div className="remainder">
+                < div className="remainder" >
                   {puzzle.rowProducts[i] ? puzzle.rowProducts[i]! / cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg * (v ?? 1) : agg, 1) : undefined}
                 </div>
               </th>
@@ -81,7 +81,7 @@ function App() {
           ))}
           <tr>
             <th></th>
-            {puzzle.colProducts.map((n, i) => (<th key={i}>
+            {puzzle.colProducts.map((n, i) => (<th key={i} onClick={() => alert(primeFactors(n ?? 1))}>
               {n}
               <div className="remainder">
                 {n ? n / cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === i ? agg * (v ?? 1) : agg, 1) : undefined}
@@ -90,7 +90,7 @@ function App() {
             <th>&#928;</th>
           </tr>
         </tbody>
-      </table>
+      </table >
       <div id="numberButtons">
         <label htmlFor="inputMode">Value</label>
         <input type="checkbox" name="inputMode" checked={inputMode} onChange={() => setInputMode(!inputMode)} />
@@ -124,7 +124,7 @@ function App() {
           }))
         }}>Validate</button>
       </div>
-    </div>
+    </div >
   );
 }
 
