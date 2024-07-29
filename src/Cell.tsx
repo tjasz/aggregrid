@@ -1,8 +1,10 @@
 import { KeyboardEventHandler } from "react";
 import { countingSequence } from "./algorithm";
+import { ValidationState } from "./ValidationState";
 
 export type CellProps = {
   value?: number;
+  validationState: ValidationState;
   options: number[];
   maxValue: number;
   onSetValue: (v: number | undefined) => void;
@@ -11,7 +13,7 @@ export type CellProps = {
   tabIndex: number;
   selected: boolean;
 }
-export function Cell({ value, options, maxValue, onSetValue, onSetOptions, onClick, tabIndex, selected }: CellProps) {
+export function Cell({ value, validationState, options, maxValue, onSetValue, onSetOptions, onClick, tabIndex, selected }: CellProps) {
   const handleKey: KeyboardEventHandler<HTMLTableCellElement> = e => {
     switch (e.code) {
       case 'Digit1':
@@ -34,7 +36,14 @@ export function Cell({ value, options, maxValue, onSetValue, onSetOptions, onCli
   }
   return <td tabIndex={tabIndex} onKeyDown={handleKey} onClick={onClick} className={selected ? "selected" : ""}>
     {value
-      ? <div className="value">{value}</div>
+      ? <div className="value" style={{
+        color:
+          validationState === ValidationState.Invalid
+            ? "red"
+            : validationState === ValidationState.Valid
+              ? "green"
+              : "black"
+      }}>{value}</div>
       : <div className="optionsContainer">
         {
           countingSequence(maxValue).map(o => (

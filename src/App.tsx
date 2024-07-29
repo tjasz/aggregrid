@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import './App.css';
 import Puzzle from './puzzle';
-import { arrayEquals, countingSequence } from './algorithm';
+import { countingSequence } from './algorithm';
 import { Cell } from './Cell';
 import { NewGameForm } from './NewGameForm';
+import { ValidationState } from './ValidationState';
 
 function App() {
   const [puzzle, setPuzzle] = useState<undefined | Puzzle>(undefined);
   const [cellValues, setCellValues] = useState<(number | undefined)[]>(new Array(9).fill(undefined));
   const [cellOptions, setCellOptions] = useState<number[][]>(new Array(9).fill([]));
+  const [validationState, setValidationState] = useState<ValidationState[]>(new Array(9).fill(ValidationState.Unchecked));
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
   const [inputMode, setInputMode] = useState(true);
 
@@ -16,6 +18,7 @@ function App() {
     setPuzzle(new Puzzle(size, undefined, uniqueValues));
     setCellValues(new Array(size * size).fill(undefined));
     setCellOptions(new Array(size * size).fill([]));
+    setValidationState(new Array(size * size).fill(ValidationState.Unchecked));
     setSelectedCell(undefined);
   }
 
@@ -25,6 +28,7 @@ function App() {
 
   const setCellValue = (i: number, j: number, v: number | undefined) => {
     setCellValues(cellValues.map((oldValue, idx) => idx === i * puzzle.size + j ? v : oldValue))
+    setValidationState(validationState.map((oldValue, idx) => idx === i * puzzle.size + j ? ValidationState.Unchecked : oldValue))
   }
 
   const setOptionsForCell = (i: number, j: number, o: number[]) => {
@@ -47,6 +51,7 @@ function App() {
                 <Cell
                   key={i * puzzle.size + j}
                   value={cellValues[i * puzzle.size + j]}
+                  validationState={validationState[i * puzzle.size + j]}
                   options={cellOptions[i * puzzle.size + j]}
                   maxValue={puzzle.maxValue}
                   onSetValue={v => setCellValue(i, j, v)}
@@ -89,11 +94,14 @@ function App() {
           </span>
         ))}
         <button onClick={() => {
-          if (arrayEquals(cellValues, puzzle.grid.values.flat())) {
-            alert("Correct!")
-          } else {
-            alert("Incorrect or Incomplete.")
-          }
+          const correctValues = puzzle.grid.values.flat();
+          setValidationState(correctValues.map((v, i) => {
+            return cellValues[i] === undefined
+              ? ValidationState.Unchecked
+              : cellValues[i] === v
+                ? ValidationState.Valid
+                : ValidationState.Invalid
+          }))
         }}>Validate</button>
       </div>
     </div>
