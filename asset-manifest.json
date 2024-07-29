@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/aggregrid/static/css/main.a03615d4.css",
-    "main.js": "/aggregrid/static/js/main.b188bfc8.js",
+    "main.js": "/aggregrid/static/js/main.74336085.js",
     "static/js/453.c52086d9.chunk.js": "/aggregrid/static/js/453.c52086d9.chunk.js",
     "service-worker.js": "/aggregrid/service-worker.js",
     "index.html": "/aggregrid/index.html",
     "main.a03615d4.css.map": "/aggregrid/static/css/main.a03615d4.css.map",
-    "main.b188bfc8.js.map": "/aggregrid/static/js/main.b188bfc8.js.map",
+    "main.74336085.js.map": "/aggregrid/static/js/main.74336085.js.map",
     "453.c52086d9.chunk.js.map": "/aggregrid/static/js/453.c52086d9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a03615d4.css",
-    "static/js/main.b188bfc8.js"
+    "static/js/main.74336085.js"
   ]
 }
