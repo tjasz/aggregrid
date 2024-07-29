@@ -3,21 +3,24 @@ import './App.css';
 import Puzzle from './puzzle';
 import { arrayEquals, countingSequence } from './algorithm';
 import { Cell } from './Cell';
+import { NewGameForm } from './NewGameForm';
 
 function App() {
-  const [size, setSize] = useState(3);
-  const [uniqueValues, setUniqueValues] = useState(true);
-  const [puzzle, setPuzzle] = useState(new Puzzle(size, undefined, uniqueValues));
-  const [cellValues, setCellValues] = useState<(number | undefined)[]>(new Array(size * size).fill(undefined));
-  const [cellOptions, setCellOptions] = useState<number[][]>(new Array(size * size).fill([]));
+  const [puzzle, setPuzzle] = useState<undefined | Puzzle>(undefined);
+  const [cellValues, setCellValues] = useState<(number | undefined)[]>(new Array(9).fill(undefined));
+  const [cellOptions, setCellOptions] = useState<number[][]>(new Array(9).fill([]));
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
   const [inputMode, setInputMode] = useState(true);
 
-  const getNewPuzzle = () => {
+  const getNewPuzzle = (size: number, uniqueValues: boolean) => {
     setPuzzle(new Puzzle(size, undefined, uniqueValues));
     setCellValues(new Array(size * size).fill(undefined));
     setCellOptions(new Array(size * size).fill([]));
     setSelectedCell(undefined);
+  }
+
+  if (puzzle === undefined) {
+    return <NewGameForm onNewGame={getNewPuzzle} />
   }
 
   const setCellValue = (i: number, j: number, v: number | undefined) => {
@@ -92,16 +95,6 @@ function App() {
             alert("Incorrect or Incomplete.")
           }
         }}>Validate</button>
-      </div>
-      <div id="newGameForm">
-        <label htmlFor="uniqueValues">Unique Values</label>
-        <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} checked={uniqueValues} />
-        <select onChange={e => setSize(parseInt(e.target.value))} value={size}>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-        <br />
-        <button onClick={getNewPuzzle}>New Puzzle</button>
       </div>
     </div>
   );
