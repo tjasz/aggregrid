@@ -75,7 +75,7 @@ function App() {
         }}>x</button>
         <br />
         {countingSequence(puzzle.maxValue).map(n => (
-          <>
+          <span key={n}>
             <button key={n} onClick={() => {
               if (selectedCell) {
                 const options = cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]];
@@ -85,7 +85,7 @@ function App() {
               }
             }}>{n}</button>
             {n % puzzle.size === 0 ? <br /> : undefined}
-          </>
+          </span>
         ))}
         <button onClick={() => {
           if (arrayEquals(cellValues, puzzle.grid.values.flat())) {
