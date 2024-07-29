@@ -42,7 +42,7 @@ function App() {
               <th>{puzzle.rowSums[i]}</th>
               {countingSequence(puzzle.size).map((n, j) => (
                 <Cell
-                  key={n}
+                  key={i * puzzle.size + j}
                   value={cellValues[i * puzzle.size + j]}
                   options={cellOptions[i * puzzle.size + j]}
                   maxValue={puzzle.maxValue}
