@@ -54,3 +54,7 @@ td.selected {
   font-size: min(2vw, 1vh);
   text-align: center;
 }
+
+.remainder {
+  font-size: min(2vw, 1vh);
+}

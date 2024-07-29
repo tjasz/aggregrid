@@ -41,12 +41,22 @@ function App() {
         <tbody>
           <tr>
             <th>&#931;</th>
-            {puzzle.colSums.map((n, i) => (<th key={i}>{n}</th>))}
+            {puzzle.colSums.map((n, j) => (<th key={j}>
+              {n}
+              <div className="remainder">
+                {n ? n - cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === j ? agg + (v ?? 0) : agg, 0) : undefined}
+              </div>
+            </th>))}
             <th></th>
           </tr>
           {countingSequence(puzzle.size).map((row, i) => (
             <tr key={i}>
-              <th>{puzzle.rowSums[i]}</th>
+              <th>
+                {puzzle.rowSums[i]}
+                <div className="remainder">
+                  {puzzle.rowSums[i] ? puzzle.rowSums[i]! - cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg + (v ?? 0) : agg, 0) : undefined}
+                </div>
+              </th>
               {countingSequence(puzzle.size).map((n, j) => (
                 <Cell
                   key={i * puzzle.size + j}
@@ -61,12 +71,22 @@ function App() {
                   selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
                 />
               ))}
-              <th>{puzzle.rowProducts[i]}</th>
+              <th>
+                {puzzle.rowProducts[i]}
+                <div className="remainder">
+                  {puzzle.rowProducts[i] ? puzzle.rowProducts[i]! / cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg * (v ?? 1) : agg, 1) : undefined}
+                </div>
+              </th>
             </tr>
           ))}
           <tr>
             <th></th>
-            {puzzle.colProducts.map((n, i) => (<th key={i}>{n}</th>))}
+            {puzzle.colProducts.map((n, i) => (<th key={i}>
+              {n}
+              <div className="remainder">
+                {n ? n / cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === i ? agg * (v ?? 1) : agg, 1) : undefined}
+              </div>
+            </th>))}
             <th>&#928;</th>
           </tr>
         </tbody>
