@@ -7,34 +7,12 @@ export type CellProps = {
   validationState: ValidationState;
   options: number[];
   maxValue: number;
-  onSetValue: (v: number | undefined) => void;
-  onSetOptions: (o: number[]) => void;
   onClick: () => void;
   tabIndex: number;
   selected: boolean;
 }
-export function Cell({ value, validationState, options, maxValue, onSetValue, onSetOptions, onClick, tabIndex, selected }: CellProps) {
-  const handleKey: KeyboardEventHandler<HTMLTableCellElement> = e => {
-    switch (e.code) {
-      case 'Digit1':
-      case 'Digit2':
-      case 'Digit3':
-      case 'Digit4':
-      case 'Digit5':
-      case 'Digit6':
-      case 'Digit7':
-      case 'Digit8':
-      case 'Digit9':
-        const value = parseInt(e.code.slice(5));
-        e.shiftKey ? onSetOptions(options.includes(value) ? options.filter(v => v !== value) : [...options, value]) : onSetValue(value);
-        break;
-      case 'Backspace':
-      case 'Delete':
-        onSetValue(undefined);
-        break;
-    }
-  }
-  return <td tabIndex={tabIndex} onKeyDown={handleKey} onClick={onClick} className={selected ? "selected" : ""}>
+export function Cell({ value, validationState, options, maxValue, onClick, tabIndex, selected }: CellProps) {
+  return <td tabIndex={tabIndex} onClick={onClick} className={selected ? "selected" : ""}>
     {value
       ? <div className="value" style={{
         color:

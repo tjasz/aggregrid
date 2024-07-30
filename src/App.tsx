@@ -64,8 +64,6 @@ function App() {
                   validationState={validationState[i * puzzle.size + j]}
                   options={cellOptions[i * puzzle.size + j]}
                   maxValue={puzzle.maxValue}
-                  onSetValue={v => setCellValue(i, j, v)}
-                  onSetOptions={o => setOptionsForCell(i, j, o)}
                   onClick={() => setSelectedCell([i, j])}
                   tabIndex={i * puzzle.size + j}
                   selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
