@@ -94,7 +94,12 @@ function App() {
         <input type="checkbox" name="inputMode" checked={inputMode} onChange={() => setInputMode(!inputMode)} />
         <button onClick={() => {
           if (selectedCell) {
-            setCellValue(selectedCell[0], selectedCell[1], undefined)
+            if (cellValues[selectedCell[0] * puzzle.size + selectedCell[1]]) {
+              setCellValue(selectedCell[0], selectedCell[1], undefined)
+            }
+            else {
+              setOptionsForCell(selectedCell[0], selectedCell[1], [])
+            }
           }
         }}>x</button>
         <br />
