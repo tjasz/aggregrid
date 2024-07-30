@@ -37,6 +37,14 @@ function App() {
 
   return (
     <div id="game">
+      <p>
+        Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
+        {puzzle.uniqueValues
+          ? puzzle.maxValue === puzzle.size * puzzle.size
+            ? "Each number must appear exactly once."
+            : "Each number may only appear once."
+          : "A number may appear multiple times."}
+      </p>
       <table>
         <tbody>
           <tr>

@@ -18,6 +18,12 @@
   color: white;
 }
 
+.app-body {
+  width: 100%;
+  height: calc(100vh - 3em);
+  overflow-y: scroll;
+}
+
 #root {
   width: 100%;
 }
@@ -26,8 +32,10 @@
 #newGameForm {
   margin: 0 auto;
   width: fit-content;
-  height: calc(100vh - 3em);
-  overflow-y: auto;
+}
+
+#game table {
+  margin: 0 auto;
 }
 
 th {
