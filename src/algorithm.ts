@@ -24,6 +24,22 @@ export function countingSequence(length: number) {
   return sequence(length, 1, p => p + 1)
 }
 
+export function sum(a: number[]) {
+  return a.reduce((agg, c) => c + agg, 0);
+}
+
+export function product(a: number[]) {
+  return a.reduce((agg, c) => agg * c, 1);
+}
+
+export function triangular(n: number) {
+  return n * (n + 1) / 2;
+}
+
+export function factorial(n: number) {
+  return product(countingSequence(n));
+}
+
 export function shuffleArray<T>(input: T[]) {
   let array = input.slice();
   for (let i = array.length - 1; i > 0; i--) {
@@ -47,10 +63,6 @@ export function primeFactors(v: number) {
     result.push(v);
   }
   return result;
-}
-
-export function product(a: number[]) {
-  return a.reduce((agg, c) => agg * c, 1);
 }
 
 class Partition {
@@ -122,10 +134,6 @@ export function factorizations(v: number, numberOfFactors: number) {
 
 export function intersect<T>(a: Set<T>, b: Set<T>) {
   return new Set([...a].filter(v => b.has(v)));
-}
-
-export function triangular(n: number) {
-  return n * (n + 1) / 2;
 }
 
 export function combinations<T>(options: T[][]) {

@@ -1,4 +1,4 @@
-import { combinations, countingSequence } from "./algorithm";
+import { combinations, countingSequence, factorial, product, sum, triangular } from "./algorithm";
 import Puzzle from "./puzzle";
 
 export class Solver {
@@ -19,10 +19,40 @@ export class Solver {
     this.maxValue = puzzle.maxValue;
     this.uniqueValues = puzzle.uniqueValues;
 
-    this.rowSums = puzzle.rowSums;
-    this.rowProducts = puzzle.rowProducts;
-    this.colSums = puzzle.colSums;
-    this.colProducts = puzzle.colProducts;
+    this.rowSums = puzzle.rowSums.slice();
+    this.rowProducts = puzzle.rowProducts.slice();
+    this.colSums = puzzle.colSums.slice();
+    this.colProducts = puzzle.colProducts.slice();
+
+    // if the numbers in the puzzle are known, infer additional aggregate hints
+    if (this.uniqueValues && this.maxValue === this.size * this.size) {
+      const totalSum = triangular(this.maxValue);
+      const totalProduct = factorial(this.maxValue);
+
+      const undefinedRowSumsWithIndex = this.rowSums.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
+      if (undefinedRowSumsWithIndex.length === 1) {
+        const remainingSum = totalSum - sum(this.rowSums.filter(v => v !== undefined) as number[]);
+        this.rowSums[undefinedRowSumsWithIndex[0].i] = remainingSum;
+      }
+
+      const undefinedColSumsWithIndex = this.colSums.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
+      if (undefinedColSumsWithIndex.length === 1) {
+        const remainingSum = totalSum - sum(this.colSums.filter(v => v !== undefined) as number[]);
+        this.colSums[undefinedColSumsWithIndex[0].i] = remainingSum;
+      }
+
+      const undefinedRowProductsWithIndex = this.rowProducts.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
+      if (undefinedRowProductsWithIndex.length === 1) {
+        const remainingProduct = totalProduct / product(this.rowProducts.filter(v => v !== undefined) as number[]);
+        this.rowProducts[undefinedRowProductsWithIndex[0].i] = remainingProduct;
+      }
+
+      const undefinedColProductsWithIndex = this.colProducts.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
+      if (undefinedColProductsWithIndex.length === 1) {
+        const remainingProduct = totalProduct / product(this.colProducts.filter(v => v !== undefined) as number[]);
+        this.colProducts[undefinedColProductsWithIndex[0].i] = remainingProduct;
+      }
+    }
 
     // start out by setting the allowed values for each cell to the entire puzzle set
     this.valueOptions = [];
@@ -46,8 +76,8 @@ export class Solver {
     for (let row = 0; row < this.size; row++) {
       if (this.rowProducts[row] !== undefined || this.rowSums[row] !== undefined) {
         const combs = combinations(this.valueOptions[row].map((s, j) => Array.from(s))).filter(g =>
-          (this.rowProducts[row] === undefined || g.reduce((agg, c) => c * agg, 1) === this.rowProducts[row]) &&
-          (this.rowSums[row] === undefined || g.reduce((agg, c) => c + agg, 0) === this.rowSums[row]) &&
+          (this.rowProducts[row] === undefined || product(g) === this.rowProducts[row]) &&
+          (this.rowSums[row] === undefined || sum(g) === this.rowSums[row]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
         )
         for (let col = 0; col < this.size; col++) {
@@ -60,8 +90,8 @@ export class Solver {
       if (this.colProducts[col] !== undefined || this.colSums[col] !== undefined) {
         const colValueOptions = this.valueOptions.map((options, row) => Array.from(options[col]));
         const combs = combinations(colValueOptions).filter(g =>
-          (this.colProducts[col] === undefined || g.reduce((agg, c) => c * agg, 1) === this.colProducts[col]) &&
-          (this.colSums[col] === undefined || g.reduce((agg, c) => c + agg, 0) === this.colSums[col]) &&
+          (this.colProducts[col] === undefined || product(g) === this.colProducts[col]) &&
+          (this.colSums[col] === undefined || sum(g) === this.colSums[col]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
         )
         for (let row = 0; row < this.size; row++) {
@@ -69,6 +99,8 @@ export class Solver {
         }
       }
     }
+    // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
+
     // if a number is the only option for this cell, it can't be in any other cell
     // TODO extend to diads, triads, quadruples, etc.
     if (this.uniqueValues) {
