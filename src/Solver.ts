@@ -42,11 +42,12 @@ export class Solver {
   }
 
   solveStep() {
-    // use the row products to eliminate options
+    // use the row products and sums to eliminate options
     for (let row = 0; row < this.size; row++) {
-      if (this.rowProducts[row] !== undefined) {
+      if (this.rowProducts[row] !== undefined || this.rowSums[row] !== undefined) {
         const combs = combinations(this.valueOptions[row].map((s, j) => Array.from(s))).filter(g =>
-          g.reduce((agg, c) => c * agg, 1) === this.rowProducts[row] &&
+          (this.rowProducts[row] === undefined || g.reduce((agg, c) => c * agg, 1) === this.rowProducts[row]) &&
+          (this.rowSums[row] === undefined || g.reduce((agg, c) => c + agg, 0) === this.rowSums[row]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
         )
         for (let col = 0; col < this.size; col++) {
@@ -54,37 +55,13 @@ export class Solver {
         }
       }
     }
-    // use the col products to eliminate options
+    // use the col products and sums to eliminate options
     for (let col = 0; col < this.size; col++) {
-      if (this.colProducts[col] !== undefined) {
+      if (this.colProducts[col] !== undefined || this.colSums[col] !== undefined) {
         const colValueOptions = this.valueOptions.map((options, row) => Array.from(options[col]));
         const combs = combinations(colValueOptions).filter(g =>
-          g.reduce((agg, c) => c * agg, 1) === this.colProducts[col] &&
-          (!this.uniqueValues || new Set(g).size === g.length)
-        )
-        for (let row = 0; row < this.size; row++) {
-          this.valueOptions[row][col] = new Set(combs.map(g => g[row]))
-        }
-      }
-    }
-    // use the row sums to eliminate options
-    for (let row = 0; row < this.size; row++) {
-      if (this.rowSums[row] !== undefined) {
-        const combs = combinations(this.valueOptions[row].map((s, j) => Array.from(s))).filter(g =>
-          g.reduce((agg, c) => c + agg, 0) === this.rowSums[row] &&
-          (!this.uniqueValues || new Set(g).size === g.length)
-        )
-        for (let col = 0; col < this.size; col++) {
-          this.valueOptions[row][col] = new Set(combs.map(g => g[col]))
-        }
-      }
-    }
-    // use the col sums to eliminate options
-    for (let col = 0; col < this.size; col++) {
-      if (this.colSums[col] !== undefined) {
-        const colValueOptions = this.valueOptions.map((options, row) => Array.from(options[col]));
-        const combs = combinations(colValueOptions).filter(g =>
-          g.reduce((agg, c) => c + agg, 0) === this.colSums[col] &&
+          (this.colProducts[col] === undefined || g.reduce((agg, c) => c * agg, 1) === this.colProducts[col]) &&
+          (this.colSums[col] === undefined || g.reduce((agg, c) => c + agg, 0) === this.colSums[col]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
         )
         for (let row = 0; row < this.size; row++) {
