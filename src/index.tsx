@@ -4,13 +4,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import AppHeader from './AppHeader';
+import AppFooter from './AppFooter';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
+    <AppHeader />
     <App />
+    <AppFooter />
   </React.StrictMode>
 );
 

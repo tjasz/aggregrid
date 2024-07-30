@@ -1,3 +1,16 @@
+.app-header,
+.app-footer {
+  background-color: #336699;
+  text-align: center;
+  height: fit-content;
+  width: 100%;
+}
+
+.app-footer {
+  position: absolute;
+  bottom: 0;
+}
+
 #root {
   width: 100%;
 }
