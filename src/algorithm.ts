@@ -20,8 +20,9 @@ export function sequence(length: number, start: number, f: (prev: number) => num
   return result;
 }
 
-export function countingSequence(length: number) {
-  return sequence(length, 1, p => p + 1)
+export function countingSequence(max: number, min?: number) {
+  min ??= 1;
+  return sequence(max - min + 1, min, p => p + 1)
 }
 
 export function sum(a: number[]) {
