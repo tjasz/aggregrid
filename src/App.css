@@ -1,14 +1,21 @@
 .app-header,
 .app-footer {
-  background-color: #336699;
+  background-color: #336799;
   text-align: center;
   height: fit-content;
   width: 100%;
+  color: white;
+  text-transform: capitalize;
 }
 
 .app-footer {
   position: absolute;
   bottom: 0;
+}
+
+.app-header a {
+  text-decoration: none;
+  color: white;
 }
 
 #root {
