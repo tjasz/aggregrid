@@ -126,6 +126,13 @@ function App() {
                 : ValidationState.Invalid
           }))
         }}>Validate</button>
+        <br />
+        <button onClick={() => {
+          setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
+          setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
+        }}>Clear All</button>
+        <br />
+        <button onClick={() => getNewPuzzle(puzzle.size, puzzle.uniqueValues)}>New Puzzle</button>
       </div>
     </div >
   );
