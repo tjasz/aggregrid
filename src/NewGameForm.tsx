@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { countingSequence } from "./algorithm";
 
 export type NewGameFormProps = {
-  onNewGame: (size: number, uniqueValues: boolean) => void;
+  onNewGame: (size: number, maxValue: number, uniqueValues: boolean) => void;
 }
 
 export function NewGameForm({ onNewGame }: NewGameFormProps) {
@@ -11,7 +11,11 @@ export function NewGameForm({ onNewGame }: NewGameFormProps) {
   const [maxValue, setMaxValue] = useState(size * size);
   const [minMaxValue, setMinMaxValue] = useState(uniqueValues ? size * size : 1);
   useEffect(() => {
-    setMinMaxValue(uniqueValues ? size * size : 1);
+    const newMin = uniqueValues ? size * size : 1;
+    setMinMaxValue(newMin);
+    if (maxValue < newMin) {
+      setMaxValue(newMin);
+    }
   }, [uniqueValues, size])
 
   return <div id="newGameForm">
@@ -30,6 +34,6 @@ export function NewGameForm({ onNewGame }: NewGameFormProps) {
       {countingSequence(20, minMaxValue).map(n => (<option key={n} value={n}>{n}</option>))}
     </select>
     <br />
-    <button onClick={() => onNewGame(size, uniqueValues)}>New Puzzle</button>
+    <button onClick={() => onNewGame(size, maxValue, uniqueValues)}>New Puzzle</button>
   </div>
 }

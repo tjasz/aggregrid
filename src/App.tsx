@@ -14,8 +14,8 @@ function App() {
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
   const [inputMode, setInputMode] = useState(true);
 
-  const getNewPuzzle = (size: number, uniqueValues: boolean) => {
-    setPuzzle(new Puzzle(size, undefined, uniqueValues));
+  const getNewPuzzle = (size: number, maxValue: number, uniqueValues: boolean) => {
+    setPuzzle(new Puzzle(size, maxValue, uniqueValues));
     setCellValues(new Array(size * size).fill(undefined));
     setCellOptions(new Array(size * size).fill([]));
     setValidationState(new Array(size * size).fill(ValidationState.Unchecked));
@@ -116,6 +116,7 @@ function App() {
             {n % puzzle.size === 0 ? <br /> : undefined}
           </span>
         ))}
+        <br />
         <button onClick={() => {
           const correctValues = puzzle.grid.values.flat();
           setValidationState(correctValues.map((v, i) => {
@@ -132,7 +133,7 @@ function App() {
           setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
         }}>Clear All</button>
         <br />
-        <button onClick={() => getNewPuzzle(puzzle.size, puzzle.uniqueValues)}>New Puzzle</button>
+        <button onClick={() => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues)}>New Puzzle</button>
       </div>
     </div >
   );
