@@ -11,6 +11,7 @@ export function NewGameForm({ onNewGame }: NewGameFormProps) {
   return <div id="newGameForm">
     <label htmlFor="uniqueValues">Unique Values</label>
     <input type="checkbox" name="uniqueValues" onChange={e => setUniqueValues(e.target.checked)} defaultChecked={uniqueValues} />
+    <br />
     <select onChange={e => setSize(parseInt(e.target.value))} defaultValue={size}>
       <option value="2">2x2</option>
       <option value="3">3x3</option>

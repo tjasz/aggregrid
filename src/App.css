@@ -22,7 +22,8 @@
   width: 100%;
 }
 
-#game {
+#game,
+#newGameForm {
   margin: 0 auto;
   width: fit-content;
 }
