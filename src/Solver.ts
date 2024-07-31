@@ -97,10 +97,21 @@ export class Solver {
     for (let i = 0; i < 10 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1)); i++) {
       this.solveStep();
     }
-    return !this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
+    const solved = !this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
+    return solved;
   }
 
   solveStep() {
+    this.useRowClues();
+    this.useColClues();
+
+    // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
+
+    this.useUniqueness();
+    this.useRequiredness();
+  }
+
+  useRowClues() {
     // use the row products and sums to eliminate options
     for (let row = 0; row < this.size; row++) {
       if (this.rowProducts[row] !== undefined || this.rowSums[row] !== undefined) {
@@ -114,6 +125,9 @@ export class Solver {
         }
       }
     }
+  }
+
+  useColClues() {
     // use the col products and sums to eliminate options
     for (let col = 0; col < this.size; col++) {
       if (this.colProducts[col] !== undefined || this.colSums[col] !== undefined) {
@@ -128,8 +142,9 @@ export class Solver {
         }
       }
     }
-    // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
+  }
 
+  useUniqueness() {
     // if a number is the only option for this cell, it can't be in any other cell
     // TODO extend to diads, triads, quadruples, etc.
     if (this.uniqueValues) {
@@ -147,7 +162,11 @@ export class Solver {
         }
       }
     }
-    // if a number can only be in this cell, it is the only option for this cell
+  }
+
+  useRequiredness() {
+    // if a number can only be in this cell and it must be somewhere in the puzzle,
+    // it is the only option for this cell
     // TODO extend to diads, triads, quadruples, etc.
     if (this.uniqueValues && this.maxValue === this.size * this.size) {
       for (let n = 1; n <= this.maxValue; n++) {
