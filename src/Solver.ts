@@ -11,6 +11,8 @@ export class Solver {
   colSums: (number | undefined)[];
   rowProducts: (number | undefined)[];
   colProducts: (number | undefined)[];
+  totalSum: number | undefined;
+  totalProduct: number | undefined;
 
   valueOptions: Set<number>[][];
 
@@ -24,42 +26,60 @@ export class Solver {
     this.colSums = puzzle.colSums.slice();
     this.colProducts = puzzle.colProducts.slice();
 
-    // if the numbers in the puzzle are known, infer additional aggregate hints
-    if (this.uniqueValues && this.maxValue === this.size * this.size) {
-      const totalSum = triangular(this.maxValue);
-      const totalProduct = factorial(this.maxValue);
+    // if the total sum or total product can be known, set them
+    this.totalSum = (this.uniqueValues && this.maxValue === this.size * this.size)
+      ? triangular(this.maxValue)
+      : this.rowSums.every(n => n !== undefined)
+        ? sum(this.rowSums as number[])
+        : this.colSums.every(n => n !== undefined)
+          ? sum(this.colSums as number[])
+          : undefined;
+    this.totalProduct = (this.uniqueValues && this.maxValue === this.size * this.size)
+      ? factorial(this.maxValue)
+      : this.rowProducts.every(n => n !== undefined)
+        ? product(this.rowProducts as number[])
+        : this.colProducts.every(n => n !== undefined)
+          ? product(this.colProducts as number[])
+          : undefined;
 
+    // infer additional aggregate hints
+    if (this.totalSum) {
       const undefinedRowSumsWithIndex = this.rowSums.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
       if (undefinedRowSumsWithIndex.length === 1) {
-        const remainingSum = totalSum - sum(this.rowSums.filter(v => v !== undefined) as number[]);
+        const remainingSum = this.totalSum - sum(this.rowSums.filter(v => v !== undefined) as number[]);
         this.rowSums[undefinedRowSumsWithIndex[0].i] = remainingSum;
       }
 
       const undefinedColSumsWithIndex = this.colSums.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
       if (undefinedColSumsWithIndex.length === 1) {
-        const remainingSum = totalSum - sum(this.colSums.filter(v => v !== undefined) as number[]);
+        const remainingSum = this.totalSum - sum(this.colSums.filter(v => v !== undefined) as number[]);
         this.colSums[undefinedColSumsWithIndex[0].i] = remainingSum;
       }
-
+    }
+    if (this.totalProduct) {
       const undefinedRowProductsWithIndex = this.rowProducts.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
       if (undefinedRowProductsWithIndex.length === 1) {
-        const remainingProduct = totalProduct / product(this.rowProducts.filter(v => v !== undefined) as number[]);
+        const remainingProduct = this.totalProduct / product(this.rowProducts.filter(v => v !== undefined) as number[]);
         this.rowProducts[undefinedRowProductsWithIndex[0].i] = remainingProduct;
       }
 
       const undefinedColProductsWithIndex = this.colProducts.map((v, i) => ({ v, i })).filter(v => v.v === undefined);
       if (undefinedColProductsWithIndex.length === 1) {
-        const remainingProduct = totalProduct / product(this.colProducts.filter(v => v !== undefined) as number[]);
+        const remainingProduct = this.totalProduct / product(this.colProducts.filter(v => v !== undefined) as number[]);
         this.colProducts[undefinedColProductsWithIndex[0].i] = remainingProduct;
       }
     }
 
-    // start out by setting the allowed values for each cell to the entire puzzle set
+    // start out by setting the allowed values for each cell to the entire set of factors of its known product clues
+    // further reduction will be done later based on options of other cells
     this.valueOptions = [];
     for (let i = 0; i < this.size; i++) {
       this.valueOptions.push([]);
       for (let j = 0; j < this.size; j++) {
-        this.valueOptions[i].push(new Set(countingSequence(this.maxValue)));
+        this.valueOptions[i].push(new Set(countingSequence(this.maxValue).filter(v =>
+          (this.rowProducts[i] === undefined || this.rowProducts[i]! % v === 0) &&
+          (this.colProducts[j] === undefined || this.colProducts[j]! % v === 0)
+        )));
       }
     }
   }
