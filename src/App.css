@@ -1,3 +1,7 @@
+#root {
+  width: 100%;
+}
+
 .app-header,
 .app-footer {
   background-color: #336799;
@@ -31,8 +35,9 @@
   overflow-y: scroll;
 }
 
-#root {
-  width: 100%;
+.app-body p {
+  margin: 0.5em 0;
+  max-width: calc(6 * min(14vw, 7vh));
 }
 
 #game,
