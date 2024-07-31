@@ -71,6 +71,7 @@ export class Solver {
     }
 
     // start out by setting the allowed values for each cell to the entire set of factors of its known product clues
+    // that can also fit within the bounds of the known sum clues
     // further reduction will be done later based on options of other cells
     this.valueOptions = [];
     for (let i = 0; i < this.size; i++) {
@@ -78,7 +79,15 @@ export class Solver {
       for (let j = 0; j < this.size; j++) {
         this.valueOptions[i].push(new Set(countingSequence(this.maxValue).filter(v =>
           (this.rowProducts[i] === undefined || this.rowProducts[i]! % v === 0) &&
-          (this.colProducts[j] === undefined || this.colProducts[j]! % v === 0)
+          (this.colProducts[j] === undefined || this.colProducts[j]! % v === 0) &&
+          (this.rowSums[i] === undefined || (
+            this.rowSums[i]! - (this.uniqueValues ? triangular(this.size - 1) : (this.size - 1)) - v >= 0 &&
+            this.rowSums[i]! - (this.uniqueValues ? triangular(this.maxValue) - triangular(this.maxValue - (this.size - 1)) : (this.size - 1) * this.maxValue) - v <= 0
+          )) &&
+          (this.colSums[i] === undefined || (
+            this.colSums[i]! - (this.uniqueValues ? triangular(this.size - 1) : (this.size - 1)) - v >= 0 &&
+            this.colSums[i]! - (this.uniqueValues ? triangular(this.maxValue) - triangular(this.maxValue - (this.size - 1)) : (this.size - 1) * this.maxValue) - v <= 0
+          ))
         )));
       }
     }
