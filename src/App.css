@@ -8,7 +8,14 @@
   text-transform: capitalize;
 }
 
+.app-header {
+  height: 3em;
+  border-bottom: 2px solid black;
+}
+
 .app-footer {
+  height: 1.5em;
+  border-top: 2px solid black;
   position: absolute;
   bottom: 0;
 }
@@ -20,7 +27,7 @@
 
 .app-body {
   width: 100%;
-  height: calc(100vh - 3em);
+  height: calc(100vh - 4.5em - 6px);
   overflow-y: scroll;
 }
 
