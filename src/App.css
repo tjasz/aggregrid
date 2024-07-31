@@ -31,7 +31,7 @@
 
 .app-body {
   width: 100%;
-  height: calc(100vh - 4.5em - 6px);
+  height: calc(100vh - 4.5em - 4px);
   overflow-y: scroll;
 }
 
