@@ -145,17 +145,43 @@ export class Solver {
   }
 
   useUniqueness() {
-    // if a number is the only option for this cell, it can't be in any other cell
-    // TODO extend to diads, triads, quadruples, etc.
     if (this.uniqueValues) {
+      // diads, triads, quadruples, etc. are most likely to occur within a row or col
+      // check for those here
+      // TODO check for diads, triads, quadruples, etc. that cross rows and cols?
       for (let row = 0; row < this.size; row++) {
+        // if this.size numbers are the only options for this row, they can't be in any other cell
+        const rowOptions = new Set(this.valueOptions[row].map(colOptions => Array.from(colOptions)).flat());
+        if (rowOptions.size === this.size) {
+          for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+              if (i !== row) {
+                this.valueOptions[i][j] = new Set(Array.from(this.valueOptions[i][j]).filter(v => !rowOptions.has(v)))
+              }
+            }
+          }
+        }
         for (let col = 0; col < this.size; col++) {
+          // if a number is the only option for this cell, it can't be in any other cell
           if (this.valueOptions[row][col].size === 1) {
             for (let i = 0; i < this.size; i++) {
               for (let j = 0; j < this.size; j++) {
                 if (i !== row || j !== col) {
                   this.valueOptions[i][j].delete(Array.from(this.valueOptions[row][col])[0]);
                 }
+              }
+            }
+          }
+        }
+      }
+      for (let col = 0; col < this.size; col++) {
+        // if this.size numbers are the only options for this col, they can't be in any other cell
+        const colOptions = new Set(this.valueOptions.map(rowOptions => Array.from(rowOptions[col])).flat());
+        if (colOptions.size === this.size) {
+          for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+              if (j !== col) {
+                this.valueOptions[i][j] = new Set(Array.from(this.valueOptions[i][j]).filter(v => !colOptions.has(v)))
               }
             }
           }
