@@ -95,7 +95,11 @@ export class Solver {
 
   solve() {
     // Use simple rules until they stop resulting in eliminations
-    for (let replacements = 1; replacements > 0; replacements = this.useRowClues() + this.useColClues());
+    for (
+      let replacements = 1;
+      replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
+      replacements = this.useRowClues() + this.useColClues() + this.useRequiredness()
+    );
 
     // Try using more complex rules
     for (let i = 0; i < 10 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1)); i++) {
@@ -161,52 +165,31 @@ export class Solver {
   }
 
   useUniqueness() {
+    let replacements = 0;
     if (this.uniqueValues) {
-      // diads, triads, quadruples, etc. are most likely to occur within a row or col
-      // check for those here
-      // TODO check for diads, triads, quadruples, etc. that cross rows and cols?
+      // if a number is the only option for this cell, it can't be in any other cell
+      // TODO check for diads, triads, quadruples, etc.
       for (let row = 0; row < this.size; row++) {
-        // if this.size numbers are the only options for this row, they can't be in any other cell
-        const rowOptions = new Set(this.valueOptions[row].map(colOptions => Array.from(colOptions)).flat());
-        if (rowOptions.size === this.size) {
-          for (let i = 0; i < this.size; i++) {
-            for (let j = 0; j < this.size; j++) {
-              if (i !== row) {
-                this.valueOptions[i][j] = new Set(Array.from(this.valueOptions[i][j]).filter(v => !rowOptions.has(v)))
-              }
-            }
-          }
-        }
         for (let col = 0; col < this.size; col++) {
-          // if a number is the only option for this cell, it can't be in any other cell
           if (this.valueOptions[row][col].size === 1) {
+            const value = Array.from(this.valueOptions[row][col])[0];
             for (let i = 0; i < this.size; i++) {
               for (let j = 0; j < this.size; j++) {
-                if (i !== row || j !== col) {
-                  this.valueOptions[i][j].delete(Array.from(this.valueOptions[row][col])[0]);
+                if (i !== row || j !== col && this.valueOptions[i][j].has(value)) {
+                  this.valueOptions[i][j].delete(value);
+                  replacements++;
                 }
               }
             }
           }
         }
       }
-      for (let col = 0; col < this.size; col++) {
-        // if this.size numbers are the only options for this col, they can't be in any other cell
-        const colOptions = new Set(this.valueOptions.map(rowOptions => Array.from(rowOptions[col])).flat());
-        if (colOptions.size === this.size) {
-          for (let i = 0; i < this.size; i++) {
-            for (let j = 0; j < this.size; j++) {
-              if (j !== col) {
-                this.valueOptions[i][j] = new Set(Array.from(this.valueOptions[i][j]).filter(v => !colOptions.has(v)))
-              }
-            }
-          }
-        }
-      }
     }
+    return replacements;
   }
 
   useRequiredness() {
+    let replacements = 0;
     // if a number can only be in this cell and it must be somewhere in the puzzle,
     // it is the only option for this cell
     // TODO extend to diads, triads, quadruples, etc.
@@ -220,10 +203,12 @@ export class Solver {
             }
           }
         }
-        if (cellsForN.length === 1) {
+        if (cellsForN.length === 1 && this.valueOptions[cellsForN[0][0]][cellsForN[0][1]].size > 1) {
           this.valueOptions[cellsForN[0][0]][cellsForN[0][1]] = new Set([n]);
+          replacements++;
         }
       }
     }
+    return replacements;
   }
 }
