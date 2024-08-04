@@ -94,6 +94,10 @@ export class Solver {
   }
 
   solve() {
+    // Use simple rules until they stop resulting in eliminations
+    for (let replacements = 1; replacements > 0; replacements = this.useRowClues() + this.useColClues());
+
+    // Try using more complex rules
     for (let i = 0; i < 10 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1)); i++) {
       this.solveStep();
     }
@@ -113,6 +117,7 @@ export class Solver {
 
   useRowClues() {
     // use the row products and sums to eliminate options
+    let replacements = 0;
     for (let row = 0; row < this.size; row++) {
       if (this.rowProducts[row] !== undefined || this.rowSums[row] !== undefined) {
         const combs = combinations(this.valueOptions[row].map((s, j) => Array.from(s))).filter(g =>
@@ -121,14 +126,20 @@ export class Solver {
           (!this.uniqueValues || new Set(g).size === g.length)
         )
         for (let col = 0; col < this.size; col++) {
-          this.valueOptions[row][col] = new Set(combs.map(g => g[col]))
+          const newOptions = new Set(combs.map(g => g[col]));
+          if (newOptions.size !== this.valueOptions[row][col].size) {
+            this.valueOptions[row][col] = newOptions;
+            replacements++;
+          }
         }
       }
     }
+    return replacements;
   }
 
   useColClues() {
     // use the col products and sums to eliminate options
+    let replacements = 0;
     for (let col = 0; col < this.size; col++) {
       if (this.colProducts[col] !== undefined || this.colSums[col] !== undefined) {
         const colValueOptions = this.valueOptions.map((options, row) => Array.from(options[col]));
@@ -138,10 +149,15 @@ export class Solver {
           (!this.uniqueValues || new Set(g).size === g.length)
         )
         for (let row = 0; row < this.size; row++) {
-          this.valueOptions[row][col] = new Set(combs.map(g => g[row]))
+          const newOptions = new Set(combs.map(g => g[row]));
+          if (newOptions.size !== this.valueOptions[row][col].size) {
+            this.valueOptions[row][col] = newOptions;
+            replacements++;
+          }
         }
       }
     }
+    return replacements;
   }
 
   useUniqueness() {

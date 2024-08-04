@@ -113,6 +113,10 @@ export function arrayEquals<T>(a: T[], b: T[]) {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 }
 
+export function setEquals<T>(a: Set<T>, b: Set<T>) {
+  return a.size === b.size && [...a].every(v => b.has(v));
+}
+
 // find all factorizations with the given number of factors
 export function factorizations(v: number, numberOfFactors: number) {
   if (numberOfFactors === 1) {
