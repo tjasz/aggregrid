@@ -77,20 +77,20 @@ function App() {
                   selected={selectedCell !== undefined && selectedCell[0] === i && selectedCell[1] === j}
                 />
               ))}
-              <th onClick={() => alert(primeFactors(puzzle.rowProducts[i] ?? 1))}>
+              <th>
                 {puzzle.rowProducts[i]}
                 < div className="remainder" >
-                  {puzzle.rowProducts[i] ? puzzle.rowProducts[i]! / cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg * (v ?? 1) : agg, 1) : undefined}
+                  {puzzle.rowProducts[i] ? primeFactors(puzzle.rowProducts[i]! / cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg * (v ?? 1) : agg, 1)).join("*") : undefined}
                 </div>
               </th>
             </tr>
           ))}
           <tr>
             <th></th>
-            {puzzle.colProducts.map((n, i) => (<th key={i} onClick={() => alert(primeFactors(n ?? 1))}>
+            {puzzle.colProducts.map((n, i) => (<th key={i}>
               {n}
               <div className="remainder">
-                {n ? n / cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === i ? agg * (v ?? 1) : agg, 1) : undefined}
+                {n ? primeFactors(n / cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === i ? agg * (v ?? 1) : agg, 1)).join("*") : undefined}
               </div>
             </th>))}
             <th>&#928;</th>
