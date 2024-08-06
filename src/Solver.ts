@@ -114,7 +114,8 @@ export class Solver {
     let replacements = 0;
     for (let row = 0; row < this.size; row++) {
       if (this.rowProducts[row] !== undefined || this.rowSums[row] !== undefined) {
-        const combs = combinations(this.valueOptions[row].map((s, j) => Array.from(s))).filter(g =>
+        const rowValueOptions = this.valueOptions[row].map((s, j) => Array.from(s));
+        const combs = combinations(rowValueOptions).filter(g =>
           (this.rowProducts[row] === undefined || product(g) === this.rowProducts[row]) &&
           (this.rowSums[row] === undefined || sum(g) === this.rowSums[row]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
