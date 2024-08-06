@@ -94,29 +94,19 @@ export class Solver {
   }
 
   solve() {
-    // Use simple rules until they stop resulting in eliminations
     for (
-      let replacements = 1;
-      replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
-      replacements = this.useRowClues() + this.useColClues() + this.useRequiredness()
+      let i = 0, replacements = 1;
+      i < 10 && replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
+      i++, replacements = this.solveStep()
     );
 
-    // Try using more complex rules
-    for (let i = 0; i < 10 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1)); i++) {
-      this.solveStep();
-    }
     const solved = !this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
     return solved;
   }
 
   solveStep() {
-    this.useRowClues();
-    this.useColClues();
-
+    return this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness();
     // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
-
-    this.useUniqueness();
-    this.useRequiredness();
   }
 
   useRowClues() {
