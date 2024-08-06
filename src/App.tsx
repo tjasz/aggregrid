@@ -52,7 +52,7 @@ function App() {
             {puzzle.colSums.map((n, j) => (<th key={j}>
               {n}
               <div className="remainder">
-                {n ? n - cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === j ? agg + (v ?? 0) : agg, 0) : undefined}
+                {n ? n - cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === j ? agg + (v ?? 0) : agg, 0) || undefined : undefined}
               </div>
             </th>))}
             <th></th>
@@ -62,7 +62,7 @@ function App() {
               <th>
                 {puzzle.rowSums[i]}
                 <div className="remainder">
-                  {puzzle.rowSums[i] ? puzzle.rowSums[i]! - cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg + (v ?? 0) : agg, 0) : undefined}
+                  {puzzle.rowSums[i] ? puzzle.rowSums[i]! - cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg + (v ?? 0) : agg, 0) || undefined : undefined}
                 </div>
               </th>
               {countingSequence(puzzle.size).map((n, j) => (
