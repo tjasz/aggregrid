@@ -105,8 +105,16 @@ export class Solver {
   }
 
   solveStep() {
-    return this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness();
-    // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
+    try {
+      console.log(this);
+      const replacements = this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness();
+      // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
+      return replacements;
+    }
+    catch (e) {
+      console.error(this);
+      return 0;
+    }
   }
 
   useRowClues() {

@@ -87,9 +87,10 @@ export default class Puzzle {
 
   harden() {
     // remove all hints that are not essential to solving the puzzle
-    let anyRemoved = true;
-    for (let round = 0; anyRemoved && round < 10; round++) {
-      anyRemoved = false;
+    let countRemoved = 1;
+    for (let round = 0; countRemoved > 0 && round < 10; round++) {
+      console.log(`Round ${round} hardening...`)
+      countRemoved = 0;
       const randomStartingHint = Math.floor(Math.random() * 4 * this.size);
       for (let hintOffset = 0; hintOffset < 4 * this.size; hintOffset++) {
         // remove hint if it is not essential to solving this puzzle
@@ -100,10 +101,11 @@ export default class Puzzle {
             this.restoreHint(hint);
           }
           else {
-            anyRemoved = true;
+            countRemoved++;
           }
         }
       }
+      console.log(`Round ${round} hardening: removed ${countRemoved} hints.`)
     }
   }
 

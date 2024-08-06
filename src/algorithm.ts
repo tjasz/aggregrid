@@ -154,10 +154,15 @@ export function intersect<T>(a: Set<T>, b: Set<T>) {
 }
 
 export function combinations<T>(options: T[][]) {
+  const totalCombinations = product(options.map(o => o.length));
+  if (totalCombinations === 0) {
+    console.log(options)
+    throw new Error("Cannot get combinations with 0 length option set");
+  }
   const lengthMinusOnes = options.map(o => o.length - 1);
   let result: T[][] = [];
   let selection = new Array(options.length).fill(0);
-  while (true) {
+  for (let c = 0; c < totalCombinations; c++) {
     // add selection to result
     let thisComb: T[] = [];
     for (let i = 0; i < options.length; i++) {
