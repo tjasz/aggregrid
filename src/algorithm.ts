@@ -156,8 +156,7 @@ export function intersect<T>(a: Set<T>, b: Set<T>) {
 export function combinations<T>(options: T[][]) {
   const totalCombinations = product(options.map(o => o.length));
   if (totalCombinations === 0) {
-    console.log(options)
-    throw new Error("Cannot get combinations with 0 length option set");
+    return [];
   }
   const lengthMinusOnes = options.map(o => o.length - 1);
   let result: T[][] = [];

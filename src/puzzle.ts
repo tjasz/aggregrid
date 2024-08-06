@@ -1,4 +1,5 @@
 import { combinations, countingSequence, factorizations, intersect, triangular } from "./algorithm";
+import debug from "./debug";
 import Grid from "./grid";
 import { Solver } from "./Solver";
 
@@ -89,7 +90,6 @@ export default class Puzzle {
     // remove all hints that are not essential to solving the puzzle
     let countRemoved = 1;
     for (let round = 0; countRemoved > 0 && round < 10; round++) {
-      console.log(`Round ${round} hardening...`)
       countRemoved = 0;
       const randomStartingHint = Math.floor(Math.random() * 4 * this.size);
       for (let hintOffset = 0; hintOffset < 4 * this.size; hintOffset++) {
@@ -105,7 +105,7 @@ export default class Puzzle {
           }
         }
       }
-      console.log(`Round ${round} hardening: removed ${countRemoved} hints.`)
+      debug(`Round ${round} hardening: removed ${countRemoved} hints.`)
     }
   }
 

@@ -1,4 +1,5 @@
 import { combinations, countingSequence, factorial, product, sum, triangular } from "./algorithm";
+import debug from "./debug";
 import Puzzle from "./puzzle";
 
 export class Solver {
@@ -82,33 +83,33 @@ export class Solver {
         this.valueOptions[i].push(new Set(countingSequence(this.maxValue).filter(v => {
           if (this.rowProducts[i] !== undefined) {
             if (this.rowProducts[i]! % v !== 0) {
-              console.log(`Rejecting value ${v} in cell [${i},${j}] - is not a factor of row product ${this.rowProducts[i]}.`);
+              debug(`Rejecting value ${v} in cell [${i},${j}] - is not a factor of row product ${this.rowProducts[i]}.`);
               return false;
             }
           }
           if (this.colProducts[j] !== undefined) {
             if (this.colProducts[j]! % v !== 0) {
-              console.log(`Rejecting value ${v} in cell [${i},${j}] - is not a factor of column product ${this.colProducts[j]}.`);
+              debug(`Rejecting value ${v} in cell [${i},${j}] - is not a factor of column product ${this.colProducts[j]}.`);
               return false;
             }
           }
           if (this.rowSums[i] !== undefined) {
             if (v < this.rowSums[i]! - maxRemainingSum) {
-              console.log(`Rejecting value ${v} in cell [${i},${j}] - is too small to be part of row sum ${this.rowSums[i]}.`);
+              debug(`Rejecting value ${v} in cell [${i},${j}] - is too small to be part of row sum ${this.rowSums[i]}.`);
               return false;
             }
             if (v > this.rowSums[i]! - minRemainingSum) {
-              console.log(`Rejecting value ${v} in cell [${i},${j}] - is too large to be part of row sum ${this.rowSums[i]}.`);
+              debug(`Rejecting value ${v} in cell [${i},${j}] - is too large to be part of row sum ${this.rowSums[i]}.`);
               return false;
             }
           }
           if (this.colSums[j] !== undefined) {
             if (v < this.colSums[j]! - maxRemainingSum) {
-              console.log(`Rejecting value ${v} in cell [${i},${j}] - is too small to be part of column sum ${this.colSums[j]}.`);
+              debug(`Rejecting value ${v} in cell [${i},${j}] - is too small to be part of column sum ${this.colSums[j]}.`);
               return false;
             }
             if (v > this.colSums[j]! - minRemainingSum) {
-              console.log(`Rejecting value ${v} in cell [${i},${j}] - is too large to be part of column sum ${this.colSums[j]}.`);
+              debug(`Rejecting value ${v} in cell [${i},${j}] - is too large to be part of column sum ${this.colSums[j]}.`);
               return false;
             }
           }
@@ -131,16 +132,9 @@ export class Solver {
   }
 
   solveStep() {
-    try {
-      console.log(this);
-      const replacements = this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness();
-      // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
-      return replacements;
-    }
-    catch (e) {
-      console.error(this);
-      return 0;
-    }
+    const replacements = this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness();
+    // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
+    return replacements;
   }
 
   useRowClues() {
