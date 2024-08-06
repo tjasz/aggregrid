@@ -24,6 +24,7 @@ export function NewGameForm({ onNewGame }: NewGameFormProps) {
       <option value="2">2x2</option>
       <option value="3">3x3</option>
       <option value="4">4x4</option>
+      <option value="5">5x5</option>
     </select>
     <br />
     <label htmlFor="uniqueValues">Unique Values</label>
@@ -31,7 +32,7 @@ export function NewGameForm({ onNewGame }: NewGameFormProps) {
     <br />
     <label htmlFor="maxValue">Max Value</label>
     <select name="maxValue" onChange={e => setMaxValue(parseInt(e.target.value))} defaultValue={size * size}>
-      {countingSequence(20, minMaxValue).map(n => (<option key={n} value={n}>{n}</option>))}
+      {countingSequence(25, minMaxValue).map(n => (<option key={n} value={n}>{n}</option>))}
     </select>
     <br />
     <button onClick={() => onNewGame(size, maxValue, uniqueValues)}>New Puzzle</button>
