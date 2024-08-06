@@ -67,6 +67,24 @@ export default class Puzzle {
     }
   }
 
+  hasHint(choice: number) {
+    if (choice < this.size) {
+      return this.rowSums[choice] !== undefined;
+    }
+    else if (choice < 2 * this.size) {
+      return this.rowProducts[choice - this.size] !== undefined;
+    }
+    else if (choice < 3 * this.size) {
+      return this.colSums[choice - 2 * this.size] !== undefined;
+    }
+    else if (choice < 4 * this.size) {
+      return this.colProducts[choice - 3 * this.size] !== undefined;
+    }
+    else {
+      throw (`Cannot check existence of hint #${choice} in a ${this.size} x ${this.size} grid.`)
+    }
+  }
+
   harden() {
     // remove all hints that are not essential to solving the puzzle
     let anyRemoved = true;
@@ -76,12 +94,14 @@ export default class Puzzle {
       for (let hintOffset = 0; hintOffset < 4 * this.size; hintOffset++) {
         // remove hint if it is not essential to solving this puzzle
         const hint = (randomStartingHint + hintOffset) % (4 * this.size);
-        this.removeHint(hint);
-        if (!new Solver(this).solve()) {
-          this.restoreHint(hint);
-        }
-        else {
-          anyRemoved = true;
+        if (this.hasHint(hint)) {
+          this.removeHint(hint);
+          if (!new Solver(this).solve()) {
+            this.restoreHint(hint);
+          }
+          else {
+            anyRemoved = true;
+          }
         }
       }
     }
