@@ -72,8 +72,10 @@ export default class Puzzle {
     let anyRemoved = true;
     for (let round = 0; anyRemoved && round < 10; round++) {
       anyRemoved = false;
-      for (let hint = round === 0 ? Math.floor(Math.random() * 4 * this.size) : 0; hint < 4 * this.size; hint++) {
+      const randomStartingHint = Math.floor(Math.random() * 4 * this.size);
+      for (let hintOffset = 0; hintOffset < 4 * this.size; hintOffset++) {
         // remove hint if it is not essential to solving this puzzle
+        const hint = (randomStartingHint + hintOffset) % (4 * this.size);
         this.removeHint(hint);
         if (!new Solver(this).solve()) {
           this.restoreHint(hint);
