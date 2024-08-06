@@ -66,6 +66,18 @@ export function primeFactors(v: number) {
   return result;
 }
 
+export function multiset(a: number[]) {
+  let result: { [v: number]: number } = {};
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] in result) {
+      result[a[i]]++;
+    } else {
+      result[a[i]] = 1;
+    }
+  }
+  return result;
+}
+
 class Partition {
   numberOfValues: number;
   numberOfGroups: number;

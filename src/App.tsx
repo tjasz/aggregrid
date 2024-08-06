@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import Puzzle from './puzzle';
-import { countingSequence, primeFactors } from './algorithm';
+import { countingSequence, multiset, primeFactors } from './algorithm';
 import { Cell } from './Cell';
 import { NewGameForm } from './NewGameForm';
 import { ValidationState } from './ValidationState';
@@ -80,7 +80,9 @@ function App() {
               <th>
                 {puzzle.rowProducts[i]}
                 < div className="remainder" >
-                  {puzzle.rowProducts[i] ? primeFactors(puzzle.rowProducts[i]! / cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg * (v ?? 1) : agg, 1)).join("*") : undefined}
+                  {puzzle.rowProducts[i] ? Object.entries(multiset(primeFactors(puzzle.rowProducts[i]! / cellValues.reduce<number>((agg, v, idx) => Math.floor(idx / puzzle.size) === i ? agg * (v ?? 1) : agg, 1)))).map(
+                    kv => kv[1] > 1 ? `${kv[0]}^${kv[1]}` : kv[0]
+                  ).join(" * ") : undefined}
                 </div>
               </th>
             </tr>
@@ -90,7 +92,9 @@ function App() {
             {puzzle.colProducts.map((n, i) => (<th key={i}>
               {n}
               <div className="remainder">
-                {n ? primeFactors(n / cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === i ? agg * (v ?? 1) : agg, 1)).join("*") : undefined}
+                {n ? Object.entries(multiset(primeFactors(n / cellValues.reduce<number>((agg, v, idx) => idx % puzzle.size === i ? agg * (v ?? 1) : agg, 1)))).map(
+                  kv => kv[1] > 1 ? `${kv[0]}^${kv[1]}` : kv[0]
+                ).join(" * ") : undefined}
               </div>
             </th>))}
             <th>&#928;</th>
