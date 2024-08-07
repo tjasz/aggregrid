@@ -17,16 +17,22 @@ export default class Puzzle {
   colProducts: (number | undefined)[];
 
   constructor(size?: number, maxValue?: number, uniqueValues?: boolean) {
-    this.grid = new Grid(size, maxValue, uniqueValues);
 
-    this.size = this.grid.size;
-    this.maxValue = this.grid.maxValue;
-    this.uniqueValues = this.grid.uniqueValues;
+    // if puzzle is not solvable with every hint enabled, get a new grid
+    let i = 0;
+    do {
+      this.grid = new Grid(size, maxValue, uniqueValues);
 
-    this.rowSums = this.grid.rowSums.slice();
-    this.rowProducts = this.grid.rowProducts.slice();
-    this.colSums = this.grid.colSums.slice();
-    this.colProducts = this.grid.colProducts.slice();
+      this.size = this.grid.size;
+      this.maxValue = this.grid.maxValue;
+      this.uniqueValues = this.grid.uniqueValues;
+
+      this.rowSums = this.grid.rowSums.slice();
+      this.rowProducts = this.grid.rowProducts.slice();
+      this.colSums = this.grid.colSums.slice();
+      this.colProducts = this.grid.colProducts.slice();
+      i++;
+    } while (i < 10 && !new Solver(this).solve());
 
     // remove hints until the puzzle is unsolvable
     this.harden();
