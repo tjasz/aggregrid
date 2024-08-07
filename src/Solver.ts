@@ -121,20 +121,26 @@ export class Solver {
   }
 
   solve() {
+    // try for a while with the simple strategies
     for (
       let i = 0, replacements = 1;
       i < 10 && replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
-      i++, replacements = this.solveStep()
+      i++, replacements = this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness()
+    );
+
+    // if the puzzle is still not solved, try more strategies
+    for (
+      let i = 0, replacements = 1;
+      i < 10 && replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
+      i++, replacements = this.useTotalProduct() + this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness()
     );
 
     const solved = !this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
+    if (this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size < 1))) {
+      console.error(this);
+      throw new Error("Puzzle had contradictory clues!")
+    }
     return solved;
-  }
-
-  solveStep() {
-    const replacements = this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness();
-    // TODO even if more than one row/col product/sum is unknown, the aggregate for all the un-hinted cells is known
-    return replacements;
   }
 
   useRowClues() {
@@ -176,6 +182,62 @@ export class Solver {
           if (newOptions.size !== this.valueOptions[row][col].size) {
             this.valueOptions[row][col] = newOptions;
             replacements++;
+          }
+        }
+      }
+    }
+    return replacements;
+  }
+
+  useTotalProduct() {
+    let replacements = 0;
+    if (this.totalProduct) {
+      const unknownRowProducts = this.rowProducts.map((product, i) => ({ product, i })).filter(p => p.product === undefined);
+      if (unknownRowProducts.length > 1) {
+        const remainingProduct = this.totalProduct / this.rowProducts.reduce<number>((agg, c) => agg * (c ?? 1), 1);
+        const valueOptions: number[][] = [];
+        for (const unknownRow of unknownRowProducts) {
+          for (let col = 0; col < this.size; col++) {
+            valueOptions.push(Array.from(this.valueOptions[unknownRow.i][col]));
+          }
+        }
+        const combs = combinations(valueOptions).filter(g =>
+          product(g) === remainingProduct &&
+          (!this.uniqueValues || new Set(g).size === g.length)
+        );
+        for (let i = 0; i < unknownRowProducts.length; i++) {
+          const unknownRow = unknownRowProducts[i];
+          for (let col = 0; col < this.size; col++) {
+            const newOptions = new Set(combs.map(g => g[i * this.size + col]));
+            if (newOptions.size !== this.valueOptions[unknownRow.i][col].size) {
+              this.valueOptions[unknownRow.i][col] = newOptions;
+              replacements++;
+            }
+          }
+        }
+      }
+
+      const unknownColProducts = this.colProducts.map((product, i) => ({ product, i })).filter(p => p.product === undefined);
+      if (unknownColProducts.length > 1) {
+        const remainingProduct = this.totalProduct / this.colProducts.reduce<number>((agg, c) => agg * (c ?? 1), 1);
+        const valueOptions: number[][] = [];
+        for (let row = 0; row < this.size; row++) {
+          for (const unknownCol of unknownColProducts) {
+            valueOptions.push(Array.from(this.valueOptions[row][unknownCol.i]));
+          }
+        }
+        const combs = combinations(valueOptions).filter(g =>
+          product(g) === remainingProduct &&
+          (!this.uniqueValues || new Set(g).size === g.length)
+        );
+        for (let row = 0; row < this.size; row++) {
+          for (let i = 0; i < unknownColProducts.length; i++) {
+            const unknownCol = unknownColProducts[i];
+            const newOptions = new Set(combs.map(g => g[row * unknownColProducts.length + i]));
+            if (newOptions.size !== this.valueOptions[row][unknownCol.i].size) {
+              this.valueOptions[row][unknownCol.i] = newOptions;
+              replacements++;
+            }
           }
         }
       }
