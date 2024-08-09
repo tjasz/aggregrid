@@ -1,4 +1,4 @@
-import { combinations, countingSequence, factorial, product, sum, triangular } from "./algorithm";
+import { combinations, countingSequence, factorial, product, setEquals, sum, triangular } from "./algorithm";
 import debug from "./debug";
 import Puzzle from "./puzzle";
 
@@ -147,6 +147,10 @@ export class Solver {
     if (replacements === 0) {
       replacements += this.useRequiredness();
     }
+    if (replacements === 0) {
+      console.log("Checking for diads using uniqueness 2...")
+      replacements += this.useUniqueness2();
+    }
     return replacements;
   }
 
@@ -255,8 +259,6 @@ export class Solver {
   useUniqueness() {
     let replacements = 0;
     if (this.uniqueValues) {
-      // if a number is the only option for this cell, it can't be in any other cell
-      // TODO check for diads, triads, quadruples, etc.
       for (let row = 0; row < this.size; row++) {
         for (let col = 0; col < this.size; col++) {
           if (this.valueOptions[row][col].size === 1) {
@@ -266,6 +268,55 @@ export class Solver {
                 if (i !== row || j !== col && this.valueOptions[i][j].has(value)) {
                   this.valueOptions[i][j].delete(value);
                   replacements++;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return replacements;
+  }
+
+  useUniqueness2() {
+    let replacements = 0;
+    if (this.uniqueValues) {
+      // if the same two numbers are the only options for two cells, they can't be in any other cell
+      // TODO check for triads, quadruples, etc.
+
+      // find the cells that have only two options
+      let cellsWithTwoOptions: { i: number, j: number, options: Set<number> }[] = [];
+      for (let i = 0; i < this.size; i++) {
+        for (let j = 0; j < this.size; j++) {
+          if (this.valueOptions[i][j].size === 2) {
+            cellsWithTwoOptions.push({ i, j, options: this.valueOptions[i][j] });
+          }
+        }
+      }
+
+      // see if any of the pairs of those cells have the same two options
+      if (cellsWithTwoOptions.length > 1) {
+        for (let i = 0; i < cellsWithTwoOptions.length - 1; i++) {
+          const cell1 = cellsWithTwoOptions[i];
+          for (let j = i + 1; j < cellsWithTwoOptions.length; j++) {
+            const cell2 = cellsWithTwoOptions[j];
+            // if these cells have the same two options, they cannot be in any other cell
+            if (setEquals(cell1.options, cell2.options)) {
+              const [v1, v2] = Array.from(cell1.options);
+              console.log(`Identififed diad ${v1}, ${v2} in cells (${cell1.i}, ${cell1.j}), (${cell2.i}, ${cell2.j})`)
+              for (let row = 0; row < this.size; row++) {
+                for (let col = 0; col < this.size; col++) {
+                  // if a cell has either value and is not one of the two identified cells, remove the value
+                  if (!((row === cell1.i && col === cell1.j) || (row === cell2.i && col === cell2.j))) {
+                    if (this.valueOptions[row][col].has(v1)) {
+                      this.valueOptions[i][j].delete(v1);
+                      replacements++;
+                    }
+                    if (this.valueOptions[row][col].has(v2)) {
+                      this.valueOptions[i][j].delete(v2);
+                      replacements++;
+                    }
+                  }
                 }
               }
             }
