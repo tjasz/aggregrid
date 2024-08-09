@@ -153,7 +153,7 @@ export function intersect<T>(a: Set<T>, b: Set<T>) {
   return new Set([...a].filter(v => b.has(v)));
 }
 
-export function combinations<T>(options: T[][]) {
+export function cartesianProduct<T>(options: T[][]) {
   const totalCombinations = product(options.map(o => o.length));
   if (totalCombinations === 0) {
     return [];

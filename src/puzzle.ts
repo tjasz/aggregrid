@@ -1,4 +1,4 @@
-import { combinations, countingSequence, factorizations, intersect, triangular } from "./algorithm";
+import { cartesianProduct, countingSequence, factorizations, intersect, triangular } from "./algorithm";
 import debug from "./debug";
 import Grid from "./grid";
 import { Solver } from "./Solver";

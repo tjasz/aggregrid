@@ -1,4 +1,4 @@
-import { combinations, countingSequence, factorial, product, setEquals, sum, triangular } from "./algorithm";
+import { cartesianProduct, countingSequence, factorial, product, setEquals, sum, triangular } from "./algorithm";
 import debug from "./debug";
 import Puzzle from "./puzzle";
 
@@ -159,7 +159,7 @@ export class Solver {
     for (let row = 0; row < this.size; row++) {
       if (this.rowProducts[row] !== undefined || this.rowSums[row] !== undefined) {
         const rowValueOptions = this.valueOptions[row].map((s, j) => Array.from(s));
-        const combs = combinations(rowValueOptions).filter(g =>
+        const combs = cartesianProduct(rowValueOptions).filter(g =>
           (this.rowProducts[row] === undefined || product(g) === this.rowProducts[row]) &&
           (this.rowSums[row] === undefined || sum(g) === this.rowSums[row]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
@@ -182,7 +182,7 @@ export class Solver {
     for (let col = 0; col < this.size; col++) {
       if (this.colProducts[col] !== undefined || this.colSums[col] !== undefined) {
         const colValueOptions = this.valueOptions.map((options, row) => Array.from(options[col]));
-        const combs = combinations(colValueOptions).filter(g =>
+        const combs = cartesianProduct(colValueOptions).filter(g =>
           (this.colProducts[col] === undefined || product(g) === this.colProducts[col]) &&
           (this.colSums[col] === undefined || sum(g) === this.colSums[col]) &&
           (!this.uniqueValues || new Set(g).size === g.length)
@@ -211,7 +211,7 @@ export class Solver {
             valueOptions.push(Array.from(this.valueOptions[unknownRow.i][col]));
           }
         }
-        const combs = combinations(valueOptions).filter(g =>
+        const combs = cartesianProduct(valueOptions).filter(g =>
           product(g) === remainingProduct &&
           (!this.uniqueValues || new Set(g).size === g.length)
         );
@@ -236,7 +236,7 @@ export class Solver {
             valueOptions.push(Array.from(this.valueOptions[row][unknownCol.i]));
           }
         }
-        const combs = combinations(valueOptions).filter(g =>
+        const combs = cartesianProduct(valueOptions).filter(g =>
           product(g) === remainingProduct &&
           (!this.uniqueValues || new Set(g).size === g.length)
         );
