@@ -125,15 +125,7 @@ export class Solver {
     for (
       let i = 0, replacements = 1;
       i < 10 && replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
-      i++, replacements = this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness()
-    );
-
-    // if the puzzle is still not solved, try more strategies
-    // TODO re-enable this block
-    for (
-      let i = 0, replacements = 1;
-      i < 0 && replacements > 0 && this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
-      i++, replacements = this.useTotalProduct() + this.useRowClues() + this.useColClues() + this.useUniqueness() + this.useRequiredness()
+      i++, replacements = this.solveStep()
     );
 
     const solved = !this.valueOptions.some(rowOptions => rowOptions.some(cellOptions => cellOptions.size > 1));
@@ -142,6 +134,20 @@ export class Solver {
       throw new Error("Puzzle had contradictory clues!")
     }
     return solved;
+  }
+
+  solveStep() {
+    let replacements = this.useRowClues();
+    if (replacements === 0) {
+      replacements += this.useColClues();
+    }
+    if (replacements === 0) {
+      replacements += this.useUniqueness();
+    }
+    if (replacements === 0) {
+      replacements += this.useRequiredness();
+    }
+    return replacements;
   }
 
   useRowClues() {
