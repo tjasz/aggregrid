@@ -148,7 +148,6 @@ export class Solver {
       replacements += this.useRequiredness();
     }
     if (replacements === 0) {
-      console.log("Checking for diads using uniqueness 2...")
       replacements += this.useUniqueness2();
     }
     return replacements;
@@ -303,7 +302,6 @@ export class Solver {
             // if these cells have the same two options, they cannot be in any other cell
             if (setEquals(cell1.options, cell2.options)) {
               const [v1, v2] = Array.from(cell1.options);
-              console.log(`Identififed diad ${v1}, ${v2} in cells (${cell1.i}, ${cell1.j}), (${cell2.i}, ${cell2.j})`)
               for (let row = 0; row < this.size; row++) {
                 for (let col = 0; col < this.size; col++) {
                   // if a cell has either value and is not one of the two identified cells, remove the value
