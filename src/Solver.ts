@@ -309,11 +309,11 @@ export class Solver {
                   // if a cell has either value and is not one of the two identified cells, remove the value
                   if (!((row === cell1.i && col === cell1.j) || (row === cell2.i && col === cell2.j))) {
                     if (this.valueOptions[row][col].has(v1)) {
-                      this.valueOptions[i][j].delete(v1);
+                      this.valueOptions[row][col].delete(v1);
                       replacements++;
                     }
                     if (this.valueOptions[row][col].has(v2)) {
-                      this.valueOptions[i][j].delete(v2);
+                      this.valueOptions[row][col].delete(v2);
                       replacements++;
                     }
                   }
