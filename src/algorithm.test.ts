@@ -1,4 +1,4 @@
-import { cartesianProduct, factorizations, partitions, primeFactors } from "./algorithm";
+import { cartesianProduct, combinations, factorizations, partitions, primeFactors } from "./algorithm";
 
 describe("primeFactors", () => {
   it.each<[number, number[]]>([
@@ -64,6 +64,20 @@ describe("cartesianProduct", () => {
     [[[1, 2], [3, 4]], [[1, 3], [2, 3], [1, 4], [2, 4]]],
   ])("cartesianProduct(%p) = %p", (args: number[][], expected: number[][]) => {
     const res = cartesianProduct(args);
+    expect(res).toEqual(expected);
+  })
+});
+
+describe("combinations", () => {
+  it.each<[number[], number, number[][]]>([
+    [[], 0, [[]]],
+    [[1, 2, 3], 0, [[]]],
+    [[1, 2, 3], 1, [[1], [2], [3]]],
+    [[1, 2, 3], 2, [[1, 2], [1, 3], [2, 3]]],
+    [[1, 2, 3], 3, [[1, 2, 3]]],
+    [[1, 3, 5, 7, 9], 2, [[1, 3], [1, 5], [1, 7], [1, 9], [3, 5], [3, 7], [3, 9], [5, 7], [5, 9], [7, 9]]],
+  ])("combinations(%p) = %p", (options: number[], size: number, expected: number[][]) => {
+    const res = combinations(options, size);
     expect(res).toEqual(expected);
   })
 });

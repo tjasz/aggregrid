@@ -153,15 +153,52 @@ export function intersect<T>(a: Set<T>, b: Set<T>) {
   return new Set([...a].filter(v => b.has(v)));
 }
 
+export function combinations<T>(options: T[], k: number): T[][] {
+  if (k < 0) {
+    throw new Error("Cannot choose less than 0 members from a set.");
+  }
+  if (k === 0) {
+    return [[]];
+  }
+  if (k === 1) {
+    return options.map(v => [v]);
+  }
+  const n = options.length;
+  if (k === n) {
+    return [options];
+  }
+  if (k > n) {
+    throw new Error(`Cannot choose ${k} members from a set of size ${n}.`)
+  }
+  const size = factorial(n) / factorial(n - k) / factorial(k);
+  let result: T[][] = [];
+  let selection = countingSequence(k - 1, 0);
+  for (let c = 0; c < size; c++) {
+    // add selection to result
+    result.push(selection.map(v => options[v]));
+    // increment
+    for (let i = k - 1, more = true; i >= 0 && more; i--) {
+      if (selection[i] < n - k + i) {
+        selection[i]++;
+        for (let j = i + 1; j < k; j++) {
+          selection[j] = selection[j - 1] + 1;
+        }
+        more = false;
+      }
+    }
+  }
+  return result;
+}
+
 export function cartesianProduct<T>(options: T[][]) {
-  const totalCombinations = product(options.map(o => o.length));
-  if (totalCombinations === 0) {
+  const size = product(options.map(o => o.length));
+  if (size === 0) {
     return [];
   }
   const lengthMinusOnes = options.map(o => o.length - 1);
   let result: T[][] = [];
   let selection = new Array(options.length).fill(0);
-  for (let c = 0; c < totalCombinations; c++) {
+  for (let c = 0; c < size; c++) {
     // add selection to result
     let thisComb: T[] = [];
     for (let i = 0; i < options.length; i++) {
