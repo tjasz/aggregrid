@@ -217,3 +217,21 @@ export function cartesianProduct<T>(options: T[][]) {
   }
   return result;
 }
+
+export function shuffle<T>(a: T[]) {
+  const array = a.slice();
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}

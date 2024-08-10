@@ -1,4 +1,4 @@
-import { cartesianProduct, countingSequence, factorizations, intersect, triangular } from "./algorithm";
+import { cartesianProduct, countingSequence, factorizations, intersect, shuffle, triangular } from "./algorithm";
 import debug from "./debug";
 import Grid from "./grid";
 import { Solver } from "./Solver";
@@ -97,10 +97,9 @@ export default class Puzzle {
     let countRemoved = 1;
     for (let round = 0; countRemoved > 0 && round < 10; round++) {
       countRemoved = 0;
-      const randomStartingHint = Math.floor(Math.random() * 4 * this.size);
-      for (let hintOffset = 0; hintOffset < 4 * this.size; hintOffset++) {
+      const hintOrder = shuffle(countingSequence(4 * this.size - 1, 0));
+      for (const hint of hintOrder) {
         // remove hint if it is not essential to solving this puzzle
-        const hint = (randomStartingHint + hintOffset) % (4 * this.size);
         if (this.hasHint(hint)) {
           this.removeHint(hint);
           if (!new Solver(this).solve()) {
