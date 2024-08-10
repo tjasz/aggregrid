@@ -1,4 +1,4 @@
-import { cartesianProduct, countingSequence, factorial, product, setEquals, sum, triangular } from "./algorithm";
+import { cartesianProduct, combinations, countingSequence, factorial, product, setEquals, sum, triangular } from "./algorithm";
 import debug from "./debug";
 import Puzzle from "./puzzle";
 
@@ -147,8 +147,8 @@ export class Solver {
     if (replacements === 0) {
       replacements += this.useRequiredness();
     }
-    if (replacements === 0) {
-      replacements += this.useUniqueness2();
+    for (let x = 2; replacements === 0 && x <= Math.ceil(this.size * this.size / 2); x++) {
+      replacements += this.useUniqueness2(x);
     }
     return replacements;
   }
@@ -277,41 +277,38 @@ export class Solver {
     return replacements;
   }
 
-  useUniqueness2() {
+  useUniqueness2(x: number) {
     let replacements = 0;
     if (this.uniqueValues) {
-      // if the same two numbers are the only options for two cells, they can't be in any other cell
-      // TODO check for triads, quadruples, etc.
+      // if the same X numbers are the only options for X cells, they can't be in any other cell
 
-      // find the cells that have only two options
-      let cellsWithTwoOptions: { i: number, j: number, options: Set<number> }[] = [];
+      // find the cells that have only X options
+      let cellsWithXOptions: { i: number, j: number, options: Set<number> }[] = [];
       for (let i = 0; i < this.size; i++) {
         for (let j = 0; j < this.size; j++) {
-          if (this.valueOptions[i][j].size === 2) {
-            cellsWithTwoOptions.push({ i, j, options: this.valueOptions[i][j] });
+          if (this.valueOptions[i][j].size > 1 && this.valueOptions[i][j].size <= x) {
+            cellsWithXOptions.push({ i, j, options: this.valueOptions[i][j] });
           }
         }
       }
 
-      // see if any of the pairs of those cells have the same two options
-      if (cellsWithTwoOptions.length > 1) {
-        for (let i = 0; i < cellsWithTwoOptions.length - 1; i++) {
-          const cell1 = cellsWithTwoOptions[i];
-          for (let j = i + 1; j < cellsWithTwoOptions.length; j++) {
-            const cell2 = cellsWithTwoOptions[j];
-            // if these cells have the same two options, they cannot be in any other cell
-            if (setEquals(cell1.options, cell2.options)) {
-              const [v1, v2] = Array.from(cell1.options);
-              for (let row = 0; row < this.size; row++) {
-                for (let col = 0; col < this.size; col++) {
-                  // if a cell has either value and is not one of the two identified cells, remove the value
-                  if (!((row === cell1.i && col === cell1.j) || (row === cell2.i && col === cell2.j))) {
-                    if (this.valueOptions[row][col].has(v1)) {
-                      this.valueOptions[row][col].delete(v1);
-                      replacements++;
-                    }
-                    if (this.valueOptions[row][col].has(v2)) {
-                      this.valueOptions[row][col].delete(v2);
+      // see if any of the groups of X cells have the same X options
+      if (cellsWithXOptions.length >= x) {
+        for (const group of combinations(cellsWithXOptions, x)) {
+          const groupOptions = new Set(group.map(cell => Array.from(cell.options)).flat());
+          if (groupOptions.size < x) {
+            throw new Error(`${x} cells have fewer than ${x} options between them.`)
+          }
+          // if these cells have the same X options, they cannot be in any other cell
+          if (groupOptions.size === x) {
+
+            for (let row = 0; row < this.size; row++) {
+              for (let col = 0; col < this.size; col++) {
+                // if a cell has one of these group options and is not part of the group, remove the options
+                if (!group.some(cell => row === cell.i && col === cell.j)) {
+                  for (const v of groupOptions) {
+                    if (this.valueOptions[row][col].has(v)) {
+                      this.valueOptions[row][col].delete(v);
                       replacements++;
                     }
                   }
