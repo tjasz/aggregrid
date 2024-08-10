@@ -1,6 +1,7 @@
 import { cartesianProduct, combinations, countingSequence, factorial, product, setEquals, sum, triangular } from "./algorithm";
 import debug from "./debug";
 import Puzzle from "./puzzle";
+import GeneralSet from "./GeneralSet";
 
 export class Solver {
   size: number;
@@ -142,10 +143,13 @@ export class Solver {
       replacements += this.useColClues();
     }
     if (replacements === 0) {
-      replacements += this.useUniqueness();
+      replacements += this.useRequiredness(1);
     }
     if (replacements === 0) {
-      replacements += this.useRequiredness();
+      replacements += this.useUniqueness();
+    }
+    for (let x = 2; replacements === 0 && x <= Math.ceil(this.size * this.size / 2); x++) {
+      replacements += this.useRequiredness(x);
     }
     for (let x = 2; replacements === 0 && x <= Math.ceil(this.size * this.size / 2); x++) {
       replacements += this.useUniqueness2(x);
@@ -322,24 +326,35 @@ export class Solver {
     return replacements;
   }
 
-  useRequiredness() {
+  useRequiredness(x: number) {
     let replacements = 0;
-    // if a number can only be in this cell and it must be somewhere in the puzzle,
-    // it is the only option for this cell
-    // TODO extend to diads, triads, quadruples, etc.
     if (this.uniqueValues && this.maxValue === this.size * this.size) {
+      let cellsForN: [number, number][][] = [];
       for (let n = 1; n <= this.maxValue; n++) {
-        let cellsForN: [number, number][] = [];
+        cellsForN.push([]);
         for (let row = 0; row < this.size; row++) {
           for (let col = 0; col < this.size; col++) {
             if (this.valueOptions[row][col].has(n)) {
-              cellsForN.push([row, col]);
+              cellsForN[n - 1].push([row, col]);
             }
           }
         }
-        if (cellsForN.length === 1 && this.valueOptions[cellsForN[0][0]][cellsForN[0][1]].size > 1) {
-          this.valueOptions[cellsForN[0][0]][cellsForN[0][1]] = new Set([n]);
-          replacements++;
+      }
+      // if a set of X numbers can only be in X cells, they have to be in those cells
+      for (const group of combinations(countingSequence(this.maxValue), x)) {
+        const cellsForSet = new GeneralSet<[number, number]>()
+        for (const v of group) {
+          for (const cell of cellsForN[v - 1])
+            cellsForSet.add(cell);
+        }
+        if (cellsForSet.size() === x) {
+          for (const cell of cellsForSet) {
+            const newOptions = new Set(group.filter(v => this.valueOptions[cell[0]][cell[1]].has(v)));
+            if (this.valueOptions[cell[0]][cell[1]].size !== newOptions.size) {
+              this.valueOptions[cell[0]][cell[1]] = newOptions;
+              replacements++;
+            }
+          }
         }
       }
     }
