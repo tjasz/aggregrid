@@ -130,6 +130,22 @@ function App() {
         ))}
         <br />
         <button onClick={() => {
+          if (selectedCell) {
+            navigator.clipboard.writeText(JSON.stringify(cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]]))
+          }
+        }}>Copy</button>
+        <button onClick={() => {
+          if (selectedCell) {
+            navigator.clipboard.readText().then(text => {
+              const clipboardValue = JSON.parse(text);
+              if (Array.isArray(clipboardValue) && clipboardValue.length > 0 && typeof clipboardValue[0] === "number") {
+                setOptionsForCell(selectedCell[0], selectedCell[1], clipboardValue)
+              }
+            })
+          }
+        }}>Paste</button>
+        <br />
+        <button onClick={() => {
           const correctValues = puzzle.grid.values.flat();
           setValidationState(correctValues.map((v, i) => {
             return cellValues[i] === undefined
