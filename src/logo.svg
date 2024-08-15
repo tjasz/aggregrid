@@ -26,6 +26,6 @@
     <path d="M10 0V20" class="grid" />
     <path d="M15 0V20" class="grid" />
     <path d="M20 0V20" class="grid" />
-    <text x="3" y="12.5" class="text">Σ</text>
-    <text x="9" y="17" class="text">Π</text>
+    <path d="M11 2.5h-7.5v1l3 4l-3 4v1h7.5v-1h-6.5l3-4l-3-4h6.5z" class="text" />
+    <path d="M9 7.5h7.5v10h-1v-9h-5.5v9h-1z" class="text" />
 </svg>
