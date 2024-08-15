@@ -8,7 +8,7 @@
         }
         .grid {
             stroke: black;
-            stroke-width: 1;
+            stroke-width: .25;
         }
     </style>
     <path d="M0 0H20V20H0z" fill="white" />
