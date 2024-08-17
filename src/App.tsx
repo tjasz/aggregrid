@@ -5,6 +5,7 @@ import { countingSequence, multiset, primeFactors } from './algorithm';
 import { Cell } from './Cell';
 import { NewGameForm } from './NewGameForm';
 import { ValidationState } from './ValidationState';
+import GameMenu from './GameMenu';
 
 function App() {
   const [puzzle, setPuzzle] = useState<undefined | Puzzle>(undefined);
@@ -54,6 +55,9 @@ function App() {
 
   return (
     <div id="game">
+      <GameMenu items={[
+        { title: "Check Puzzle", action: validate }
+      ]} />
       <p>
         Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
         {puzzle.uniqueValues
@@ -161,8 +165,6 @@ function App() {
             })
           }
         }}>Paste</button>
-        <br />
-        <button onClick={() => validate()}>Validate</button>
         <br />
         <button onClick={() => {
           setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
