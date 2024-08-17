@@ -6,6 +6,8 @@ import { Cell } from './Cell';
 import { NewGameForm } from './NewGameForm';
 import { ValidationState } from './ValidationState';
 import GameMenu from './GameMenu';
+import { IconButton, Toolbar } from '@mui/material';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function App() {
   const [puzzle, setPuzzle] = useState<undefined | Puzzle>(undefined);
@@ -77,19 +79,22 @@ function App() {
 
   return (
     <div id="game">
-      <GameMenu items={[
-        { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
-        { title: "Check Puzzle", action: validate },
-        { title: "Reveal Cell", action: () => selectedCell && revealCell(selectedCell[0], selectedCell[1]) },
-        { title: "Reveal Puzzle", action: revealPuzzle },
-        {
-          title: "Reset Puzzle", action: () => {
-            setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
-            setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
-          }
-        },
-        { title: "New Puzzle", action: () => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues) },
-      ]} />
+      <Toolbar>
+        <IconButton onClick={() => setPuzzle(undefined)}><ArrowBackIcon /></IconButton>
+        <GameMenu items={[
+          { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
+          { title: "Check Puzzle", action: validate },
+          { title: "Reveal Cell", action: () => selectedCell && revealCell(selectedCell[0], selectedCell[1]) },
+          { title: "Reveal Puzzle", action: revealPuzzle },
+          {
+            title: "Reset Puzzle", action: () => {
+              setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
+              setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
+            }
+          },
+          { title: "New Puzzle", action: () => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues) },
+        ]} />
+      </Toolbar>
       <p>
         Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
         {puzzle.uniqueValues

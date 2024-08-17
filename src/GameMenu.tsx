@@ -1,7 +1,7 @@
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
 import { IconButton } from "@mui/material";
 
@@ -36,7 +36,7 @@ export default function GameMenuProps(
   };
 
   return <>
-    <IconButton onClick={handleContextMenu}><MenuIcon /></IconButton>
+    <IconButton onClick={handleContextMenu}><MoreHorizIcon /></IconButton>
     <Menu
       open={contextMenu !== null}
       onClose={handleClose}
