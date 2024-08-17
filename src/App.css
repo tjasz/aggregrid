@@ -68,6 +68,7 @@ td.selected {
 #numberButtons {
   margin: 0 auto;
   width: fit-content;
+  position: relative;
 }
 
 #numberButtons button,
@@ -75,6 +76,11 @@ td.selected {
   font-size: min(9vw, 4.5vh);
   min-width: min(14vw, 7vh);
   height: min(14vw, 7vh);
+}
+
+#backspaceButton {
+  position: absolute;
+  right: 0;
 }
 
 .value {

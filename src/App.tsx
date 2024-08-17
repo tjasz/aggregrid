@@ -121,7 +121,7 @@ function App() {
       <div id="numberButtons">
         <label htmlFor="inputMode">Value</label>
         <input type="checkbox" name="inputMode" checked={inputMode} onChange={() => setInputMode(!inputMode)} />
-        <button onClick={() => {
+        <button id="backspaceButton" onClick={() => {
           if (selectedCell) {
             if (cellValues[selectedCell[0] * puzzle.size + selectedCell[1]]) {
               setCellValue(selectedCell[0], selectedCell[1], undefined)
