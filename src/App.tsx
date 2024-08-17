@@ -53,10 +53,23 @@ function App() {
     }))
   }
 
+  const validateCell = (i: number, j: number, newValue?: number) => {
+    newValue ??= cellValues[i * puzzle.size + j];
+    if (newValue !== undefined) {
+      const correctValue = puzzle.grid.values[i][j];
+      setValidationState(validationState.map((state, idx) =>
+        idx === i * puzzle.size + j
+          ? newValue === correctValue ? ValidationState.Valid : ValidationState.Invalid
+          : state
+      ))
+    }
+  }
+
   return (
     <div id="game">
       <GameMenu items={[
-        { title: "Check Puzzle", action: validate }
+        { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
+        { title: "Check Puzzle", action: validate },
       ]} />
       <p>
         Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
