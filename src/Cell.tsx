@@ -31,7 +31,7 @@ export function Cell({ value, validationState, options, maxValue, onClick, tabIn
                 visibility: `${options.includes(o) ? "visible" : "hidden"}`,
                 color: `hsl(${300 * o / maxValue},50%,50%)`
               }}
-              className={maxValue > 9 ? "option4" : "option3"}
+              className={maxValue > 20 ? "option5" : maxValue > 9 ? "option4" : "option3"}
             >
               {o}
             </span>

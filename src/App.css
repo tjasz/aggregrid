@@ -99,6 +99,14 @@ td.selected {
   text-align: center;
 }
 
+.option5 {
+  display: block;
+  float: left;
+  width: 19%;
+  font-size: min(2vw, 1vh);
+  text-align: center;
+}
+
 .remainder {
   font-size: min(2vw, 1vh);
 }

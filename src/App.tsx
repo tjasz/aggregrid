@@ -125,7 +125,7 @@ function App() {
                   : setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n]);
               }
             }}>{n}</button>
-            {n % (puzzle.maxValue > 9 ? 4 : 3) === 0 ? <br /> : undefined}
+            {n % (puzzle.maxValue > 20 ? 5 : puzzle.maxValue > 9 ? 4 : 3) === 0 ? <br /> : undefined}
           </span>
         ))}
         <br />
