@@ -1,6 +1,7 @@
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 
 type MousePosition = {
@@ -34,7 +35,7 @@ export default function GameMenuProps(
   };
 
   return <>
-    <span onClick={handleContextMenu}>M</span>
+    <span onClick={handleContextMenu}><MenuIcon /></span>
     <Menu
       open={contextMenu !== null}
       onClose={handleClose}
