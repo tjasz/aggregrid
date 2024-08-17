@@ -27,12 +27,29 @@ function App() {
   }
 
   const setCellValue = (i: number, j: number, v: number | undefined) => {
-    setCellValues(cellValues.map((oldValue, idx) => idx === i * puzzle.size + j ? v : oldValue))
-    setValidationState(validationState.map((oldValue, idx) => idx === i * puzzle.size + j ? ValidationState.Unchecked : oldValue))
+    const newValues = cellValues.map((oldValue, idx) => idx === i * puzzle.size + j ? v : oldValue);
+    setCellValues(newValues)
+    if (newValues.some(v => v === undefined)) {
+      setValidationState(validationState.map((oldValue, idx) => idx === i * puzzle.size + j ? ValidationState.Unchecked : oldValue))
+    } else {
+      validate(newValues);
+    }
   }
 
   const setOptionsForCell = (i: number, j: number, o: number[]) => {
     setCellOptions(cellOptions.map((oldValue, idx) => idx === i * puzzle.size + j ? o : oldValue))
+  }
+
+  const validate = (newValues?: (number | undefined)[]) => {
+    newValues ??= cellValues;
+    const correctValues = puzzle.grid.values.flat();
+    setValidationState(correctValues.map((v, i) => {
+      return newValues![i] === undefined
+        ? ValidationState.Unchecked
+        : newValues![i] === v
+          ? ValidationState.Valid
+          : ValidationState.Invalid
+    }))
   }
 
   return (
@@ -145,16 +162,7 @@ function App() {
           }
         }}>Paste</button>
         <br />
-        <button onClick={() => {
-          const correctValues = puzzle.grid.values.flat();
-          setValidationState(correctValues.map((v, i) => {
-            return cellValues[i] === undefined
-              ? ValidationState.Unchecked
-              : cellValues[i] === v
-                ? ValidationState.Valid
-                : ValidationState.Invalid
-          }))
-        }}>Validate</button>
+        <button onClick={() => validate()}>Validate</button>
         <br />
         <button onClick={() => {
           setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
