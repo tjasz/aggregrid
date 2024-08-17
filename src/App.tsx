@@ -41,6 +41,16 @@ function App() {
     setCellOptions(cellOptions.map((oldValue, idx) => idx === i * puzzle.size + j ? o : oldValue))
   }
 
+  const revealPuzzle = () => {
+    const correctValues = puzzle.grid.values.flat();
+    setCellValues(correctValues);
+  }
+
+  const revealCell = (i: number, j: number) => {
+    const correctValue = puzzle.grid.values[i][j];
+    setCellValue(i, j, correctValue);
+  }
+
   const validate = (newValues?: (number | undefined)[]) => {
     newValues ??= cellValues;
     const correctValues = puzzle.grid.values.flat();
@@ -70,12 +80,15 @@ function App() {
       <GameMenu items={[
         { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
         { title: "Check Puzzle", action: validate },
+        { title: "Reveal Cell", action: () => selectedCell && revealCell(selectedCell[0], selectedCell[1]) },
+        { title: "Reveal Puzzle", action: revealPuzzle },
         {
           title: "Reset Puzzle", action: () => {
             setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
             setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
           }
         },
+        { title: "New Puzzle", action: () => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues) },
       ]} />
       <p>
         Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
@@ -184,8 +197,6 @@ function App() {
             })
           }
         }}>Paste</button>
-        <br />
-        <button onClick={() => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues)}>New Puzzle</button>
       </div>
     </div >
   );
