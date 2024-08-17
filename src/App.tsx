@@ -12,7 +12,7 @@ function App() {
   const [cellOptions, setCellOptions] = useState<number[][]>(new Array(9).fill([]));
   const [validationState, setValidationState] = useState<ValidationState[]>(new Array(9).fill(ValidationState.Unchecked));
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
-  const [inputMode, setInputMode] = useState(true);
+  const [candidateMode, setCandidateMode] = useState(false);
 
   const getNewPuzzle = (size: number, maxValue: number, uniqueValues: boolean) => {
     setPuzzle(new Puzzle(size, maxValue, uniqueValues));
@@ -119,8 +119,8 @@ function App() {
         </tbody>
       </table >
       <div id="numberButtons">
-        <label htmlFor="inputMode">Value</label>
-        <input type="checkbox" name="inputMode" checked={inputMode} onChange={() => setInputMode(!inputMode)} />
+        <label htmlFor="candidateMode">Candidate</label>
+        <input type="checkbox" name="candidateMode" checked={candidateMode} onChange={() => setCandidateMode(!candidateMode)} />
         <button id="backspaceButton" onClick={() => {
           if (selectedCell) {
             if (cellValues[selectedCell[0] * puzzle.size + selectedCell[1]]) {
@@ -134,12 +134,12 @@ function App() {
         <br />
         {countingSequence(puzzle.maxValue).map(n => (
           <span key={n}>
-            <button key={n} disabled={selectedCell === undefined || (inputMode || !cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]].includes(n)) && puzzle.uniqueValues && cellValues.includes(n)} onClick={() => {
+            <button key={n} disabled={selectedCell === undefined || (!candidateMode || !cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]].includes(n)) && puzzle.uniqueValues && cellValues.includes(n)} onClick={() => {
               if (selectedCell) {
                 const options = cellOptions[selectedCell[0] * puzzle.size + selectedCell[1]];
-                inputMode
-                  ? setCellValue(selectedCell[0], selectedCell[1], n)
-                  : setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n]);
+                candidateMode
+                  ? setOptionsForCell(selectedCell[0], selectedCell[1], options.includes(n) ? options.filter(v => v !== n) : [...options, n])
+                  : setCellValue(selectedCell[0], selectedCell[1], n);
               }
             }}>{n}</button>
             {n % (puzzle.maxValue > 20 ? 5 : puzzle.maxValue > 9 ? 4 : 3) === 0 ? <br /> : undefined}
