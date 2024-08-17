@@ -70,6 +70,12 @@ function App() {
       <GameMenu items={[
         { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
         { title: "Check Puzzle", action: validate },
+        {
+          title: "Reset Puzzle", action: () => {
+            setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
+            setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
+          }
+        },
       ]} />
       <p>
         Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
@@ -178,11 +184,6 @@ function App() {
             })
           }
         }}>Paste</button>
-        <br />
-        <button onClick={() => {
-          setCellValues(new Array(puzzle.size * puzzle.size).fill(undefined));
-          setCellOptions(new Array(puzzle.size * puzzle.size).fill([]));
-        }}>Clear All</button>
         <br />
         <button onClick={() => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues)}>New Puzzle</button>
       </div>
