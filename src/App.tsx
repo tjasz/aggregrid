@@ -6,7 +6,7 @@ import { Cell } from './Cell';
 import { NewGameForm } from './NewGameForm';
 import { ValidationState } from './ValidationState';
 import GameMenu from './GameMenu';
-import { IconButton, Toolbar } from '@mui/material';
+import { Box, IconButton, Toolbar } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 function App() {
@@ -80,7 +80,9 @@ function App() {
   return (
     <div id="game">
       <Toolbar>
-        <IconButton onClick={() => setPuzzle(undefined)}><ArrowBackIcon /></IconButton>
+        <Box display="flex" flexGrow={1}>
+          <IconButton onClick={() => setPuzzle(undefined)}><ArrowBackIcon /></IconButton>
+        </Box>
         <GameMenu items={[
           { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
           { title: "Check Puzzle", action: validate },
