@@ -8,6 +8,8 @@ import { ValidationState } from './ValidationState';
 import GameMenu from './GameMenu';
 import { Box, IconButton, Toolbar } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import HelpDialog from './HelpDialog';
 
 function App() {
   const [puzzle, setPuzzle] = useState<undefined | Puzzle>(undefined);
@@ -16,6 +18,7 @@ function App() {
   const [validationState, setValidationState] = useState<ValidationState[]>(new Array(9).fill(ValidationState.Unchecked));
   const [selectedCell, setSelectedCell] = useState<undefined | [number, number]>(undefined);
   const [candidateMode, setCandidateMode] = useState(false);
+  const [helpDialogOpen, setHelpDialogOpen] = useState(false);
 
   const getNewPuzzle = (size: number, maxValue: number, uniqueValues: boolean) => {
     setPuzzle(new Puzzle(size, maxValue, uniqueValues));
@@ -79,10 +82,21 @@ function App() {
 
   return (
     <div id="game">
+      <HelpDialog open={helpDialogOpen} onDismiss={() => setHelpDialogOpen(false)}>
+        <p>
+          Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
+          {puzzle.uniqueValues
+            ? puzzle.maxValue === puzzle.size * puzzle.size
+              ? "Each number must appear exactly once."
+              : "Each number may only appear once."
+            : "A number may appear multiple times."}
+        </p>
+      </HelpDialog>
       <Toolbar>
         <Box display="flex" flexGrow={1}>
           <IconButton onClick={() => setPuzzle(undefined)}><ArrowBackIcon /></IconButton>
         </Box>
+        <IconButton onClick={() => setHelpDialogOpen(true)}><HelpOutlineIcon /></IconButton>
         <GameMenu items={[
           { title: "Check Cell", action: () => selectedCell && validateCell(selectedCell[0], selectedCell[1]) },
           { title: "Check Puzzle", action: validate },
@@ -97,14 +111,6 @@ function App() {
           { title: "New Puzzle", action: () => getNewPuzzle(puzzle.size, puzzle.maxValue, puzzle.uniqueValues) },
         ]} />
       </Toolbar>
-      <p>
-        Arrange the numbers 1-{puzzle.maxValue} in the {puzzle.size}x{puzzle.size} grid.&nbsp;
-        {puzzle.uniqueValues
-          ? puzzle.maxValue === puzzle.size * puzzle.size
-            ? "Each number must appear exactly once."
-            : "Each number may only appear once."
-          : "A number may appear multiple times."}
-      </p>
       <table>
         <tbody>
           <tr>
